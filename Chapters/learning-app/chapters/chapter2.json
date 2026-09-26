@@ -1,0 +1,415 @@
+{
+    "title": "Chapter 2: Overview of CNCF and Kubernetes Certifications",
+    "subtitle": "Understanding the cloud-native ecosystem and certification paths",
+    "themeColor": "#8b5cf6",
+    "themeColorDark": "#6d28d9",
+    "lessons": [
+        {
+            "title": "Lesson 1: OSS and Open Standards",
+            "navTitle": "OSS & Open Standards",
+            "cards": [
+                {
+                    "title": "What is Open Source Software (OSS)?",
+                    "content": [
+                        { "type": "highlight", "value": "Software whose source code is publicly available for anyone to study, modify, and distribute" },
+                        { "type": "quote", "value": "OSS is when the source code of the software is publicly accessible and anyone can study, modify, and distribute it for any purpose." },
+                        { "type": "nested", "title": "Key Characteristics", "content": [
+                            { "type": "list", "items": [
+                                "Requires an <strong>open source license</strong> (Apache 2.0, GPLv3, MIT, etc.)",
+                                "Can be used <strong>commercially</strong> without licensing fees",
+                                "Encourages <strong>community collaboration</strong>",
+                                "Promotes <strong>transparency</strong> and <strong>innovation</strong>"
+                            ]}
+                        ]},
+                        { "type": "nested", "title": "Major OSS Projects", "content": [
+                            { "type": "tags", "items": ["Linux", "Kubernetes", "Terraform", "Prometheus", "Django", "PostgreSQL", "Node.js", "React"] }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Open Container Initiative (OCI)",
+                    "content": [
+                        { "type": "text", "value": "Founded in <strong>2015</strong> to standardize container formats and runtimes." },
+                        { "type": "keypoint", "badge": "Analogy", "value": "Standardized wheel sizes allow any wheel to fit any car; OCI standards allow any compliant container runtime or image to work together." },
+                        { "type": "text", "value": "<strong>OCI Specifications:</strong>" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "📦", "title": "Image Spec", "text": "How container images are built and packaged" },
+                            { "icon": "⚙️", "title": "Runtime Spec", "text": "How containers execute and behave" },
+                            { "icon": "🔄", "title": "Distribution Spec", "text": "How images are transferred via registries" }
+                        ]},
+                        { "type": "concept", "title": "Why Open Standards Matter", "value": "✅ Avoid vendor lock-in ✅ Ensure compatibility ✅ Enable ecosystem growth ✅ Promote interoperability" }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "OSS & OCI Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What does OSS stand for?",
+                        "options": ["Online Software Service", "Open Source Software", "Operating System Software"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "When was the Open Container Initiative (OCI) founded?",
+                        "options": ["2010", "2015", "2018"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are OCI specifications? (Select all that apply)",
+                        "options": [
+                            { "text": "Image Specification", "value": "image" },
+                            { "text": "Runtime Specification", "value": "runtime" },
+                            { "text": "Distribution Specification", "value": "distribution" },
+                            { "text": "Network Specification", "value": "network" }
+                        ],
+                        "answer": ["image", "runtime", "distribution"],
+                        "multi": true
+                    },
+                    {
+                        "question": "What is a key benefit of open standards?",
+                        "options": ["Increased vendor lock-in", "Avoid vendor lock-in", "Higher licensing costs"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Linux Foundation & CNCF",
+            "navTitle": "Linux Foundation & CNCF",
+            "cards": [
+                {
+                    "title": "The Linux Foundation",
+                    "content": [
+                        { "type": "text", "value": "Founded in <strong>2000</strong>, the Linux Foundation is the backbone of open source." },
+                        { "type": "nested", "title": "What Does the Linux Foundation Do?", "content": [
+                            { "type": "grid", "columns": 4, "items": [
+                                { "icon": "🐧", "text": "Supports Linux development" },
+                                { "icon": "🏠", "text": "Hosts major OSS projects" },
+                                { "icon": "🎓", "text": "Runs certifications & training" },
+                                { "icon": "🎤", "text": "Organizes conferences" }
+                            ]}
+                        ]},
+                        { "type": "nested", "title": "Hosted Projects", "content": [
+                            { "type": "tags", "items": ["Ceph", "XEN", "Real-Time Linux", "OAI", "Node.js"] }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Cloud Native Computing Foundation (CNCF)",
+                    "content": [
+                        { "type": "stats", "items": [
+                            { "value": "2015", "label": "Founded" },
+                            { "value": "450+", "label": "Members" },
+                            { "value": "100+", "label": "Projects" }
+                        ]},
+                        { "type": "quote", "value": "The Foundation's mission is to make cloud-native computing ubiquitous." },
+                        { "type": "text", "value": "CNCF was founded in 2015 when Kubernetes 1.0 was released. Kubernetes became the first CNCF project." },
+                        { "type": "nested", "title": "What CNCF Supports", "content": [
+                            { "type": "tags", "items": ["📦 Containers", "🔗 Microservices", "🕸️ Service Meshes", "🏗️ Immutable Infrastructure", "📋 Declarative APIs"] }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "CNCF History Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "When was the Linux Foundation founded?",
+                        "options": ["1995", "2000", "2005"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "When was CNCF founded?",
+                        "options": ["2013", "2015", "2017"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What was the first CNCF project?",
+                        "options": ["Prometheus", "Kubernetes", "Envoy"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does CNCF support? (Select all that apply)",
+                        "options": [
+                            { "text": "Containers", "value": "containers" },
+                            { "text": "Microservices", "value": "microservices" },
+                            { "text": "Service Meshes", "value": "meshes" },
+                            { "text": "Declarative APIs", "value": "declarative" }
+                        ],
+                        "answer": ["containers", "microservices", "meshes", "declarative"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: CNCF Project Maturity & Governance",
+            "navTitle": "CNCF Projects & Governance",
+            "cards": [
+                {
+                    "title": "Project Maturity Levels",
+                    "content": [
+                        { "type": "text", "value": "CNCF categorizes projects into three maturity levels:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🧪", "title": "Sandbox", "text": "Early-stage, experimental projects" },
+                            { "icon": "🌱", "title": "Incubating", "text": "Used in production, active contributions" },
+                            { "icon": "🎓", "title": "Graduated", "text": "Multi-org contributors, security audited" }
+                        ]},
+                        { "type": "keypoint", "badge": "All CNCF Projects Must", "value": "Follow the CNCF Code of Conduct and CNCF IP Policy (usually Apache 2.0 + CC BY 4.0)" }
+                    ]
+                },
+                {
+                    "title": "Example CNCF Projects by Level",
+                    "content": [
+                        { "type": "nested", "title": "Graduated Projects", "content": [
+                            { "type": "tags", "items": [
+                                { "text": "Kubernetes", "primary": true },
+                                { "text": "Prometheus", "primary": true },
+                                { "text": "Envoy", "primary": true },
+                                { "text": "containerd", "primary": true },
+                                { "text": "Helm", "primary": true },
+                                { "text": "Fluentd", "primary": true }
+                            ]}
+                        ]},
+                        { "type": "nested", "title": "Incubating Projects", "content": [
+                            { "type": "tags", "items": ["Argo", "Cilium", "Dapr", "Knative", "KEDA"] }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "CNCF Governance Structure",
+                    "content": [
+                        { "type": "concept", "title": "Minimal Viable Governance", "value": "Projects self-govern unless intervention is needed. CNCF provides structure without micromanagement." },
+                        { "type": "text", "value": "<strong>CNCF Governing Bodies:</strong>" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🏛️", "title": "Governing Board (GB)", "text": "Business, budget, marketing" },
+                            { "icon": "🔧", "title": "TOC", "text": "Technical vision, project approval, maturity decisions" },
+                            { "icon": "👥", "title": "End User Community", "text": "Feedback from real users" }
+                        ]},
+                        { "type": "example", "title": "First Graduated Project", "value": "Kubernetes was the first project to graduate in 2018." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Maturity & Governance Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What are the CNCF maturity levels? (Select all that apply)",
+                        "options": [
+                            { "text": "Sandbox", "value": "sandbox" },
+                            { "text": "Released", "value": "released" },
+                            { "text": "Incubating", "value": "incubating" },
+                            { "text": "Graduated", "value": "graduated" }
+                        ],
+                        "answer": ["sandbox", "incubating", "graduated"],
+                        "multi": true
+                    },
+                    {
+                        "question": "Which body decides project maturity levels?",
+                        "options": ["Governing Board (GB)", "Technical Oversight Committee (TOC)", "End User Community (EUC)"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is required for CNCF graduation? (Select all that apply)",
+                        "options": [
+                            { "text": "Contributors from multiple organizations", "value": "multiorg" },
+                            { "text": "Passed third-party security audit", "value": "audit" },
+                            { "text": "Core Infrastructure Initiative best practices", "value": "cii" },
+                            { "text": "$1 million in funding", "value": "funding" }
+                        ],
+                        "answer": ["multiorg", "audit", "cii"],
+                        "multi": true
+                    },
+                    {
+                        "question": "When did Kubernetes graduate?",
+                        "options": ["2016", "2018", "2020"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Cloud Roles & Personas",
+            "navTitle": "Cloud Roles & Personas",
+            "cards": [
+                {
+                    "title": "Role Comparison Overview",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Architecture Roles", "rightTitle": "Operations Roles",
+                            "left": ["Cloud Architect - designs infrastructure", "Data Engineer - manages data systems", "Full Stack Dev - builds applications"],
+                            "right": ["DevOps Engineer - automates CI/CD", "SRE - ensures reliability", "DevSecOps - integrates security"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Cloud Architect",
+                    "content": [
+                        { "type": "text", "value": "🏗️ <strong>Cloud Architect</strong> - The infrastructure designer" },
+                        { "type": "list", "items": [
+                            "Designs cloud infrastructure",
+                            "Chooses cloud providers & services",
+                            "Understands <strong>CAPEX vs OPEX</strong>",
+                            "Ensures resiliency, scalability, automation"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "DevOps Engineer",
+                    "content": [
+                        { "type": "text", "value": "🔄 <strong>DevOps Engineer</strong> - Bridges development + operations" },
+                        { "type": "list", "items": [
+                            "Automates <strong>CI/CD pipelines</strong>",
+                            "Uses tools like Terraform, Ansible, Puppet",
+                            "Often works with Kubernetes",
+                            "Emphasizes shared responsibility & learning over blame"
+                        ]},
+                        { "type": "tags", "items": [
+                            { "text": "Terraform", "primary": true },
+                            { "text": "Ansible", "primary": true },
+                            { "text": "Puppet", "primary": true },
+                            { "text": "Jenkins", "primary": true }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "More Cloud Roles",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔐", "title": "DevSecOps", "text": "DevOps + security focus, shift-left security" },
+                            { "icon": "💰", "title": "FinOps", "text": "Manages cloud costs, pricing models" },
+                            { "icon": "🛡️", "title": "SRE", "text": "Ensures SLAs/SLOs, maintains reliability" },
+                            { "icon": "☁️", "title": "Cloud Engineer", "text": "Deep knowledge of cloud provider services" },
+                            { "icon": "📊", "title": "Data Engineer", "text": "Manages data storage, protection, analytics" },
+                            { "icon": "💻", "title": "Full Stack Dev", "text": "Frontend + backend, basic cloud knowledge" }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Match the Role",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Who designs cloud infrastructure and selects cloud providers?",
+                        "options": ["DevOps Engineer", "Cloud Architect", "SRE"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Who ensures SLAs/SLOs and maintains reliability?",
+                        "options": ["FinOps Engineer", "Data Engineer", "Site Reliability Engineer (SRE)"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What's the difference between DevOps and DevSecOps?",
+                        "options": ["DevSecOps focuses on security", "DevOps focuses on security", "They are the same"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Who manages cloud costs and pricing models?",
+                        "options": ["Full Stack Developer", "FinOps Engineer", "Cloud Engineer"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "DevOps culture emphasizes: (Select all that apply)",
+                        "options": [
+                            { "text": "Shared responsibility", "value": "shared" },
+                            { "text": "Blame culture", "value": "blame" },
+                            { "text": "Learning over blame", "value": "learning" },
+                            { "text": "Cross-team collaboration", "value": "collab" }
+                        ],
+                        "answer": ["shared", "learning", "collab"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Kubernetes Certification Path",
+            "navTitle": "Kubernetes Certifications",
+            "cards": [
+                {
+                    "title": "CNCF Kubernetes Certifications",
+                    "content": [
+                        { "type": "text", "value": "CNCF offers four Kubernetes certifications:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "KCNA", "text": "Entry-level, multiple-choice, 3-year validity" },
+                            { "title": "CKAD", "text": "Hands-on, focus on deploying apps, 2-year validity" },
+                            { "title": "CKA", "text": "Hands-on, focus on cluster management, 2-year validity" },
+                            { "title": "CKS", "text": "Hands-on, requires CKA, most difficult, 2-year validity" }
+                        ]},
+                        { "type": "keypoint", "badge": "Recommended Path", "value": "KCNA → CKAD → CKA → CKS" }
+                    ]
+                },
+                {
+                    "title": "KCNA Exam Details",
+                    "content": [
+                        { "type": "stats", "items": [
+                            { "value": "60", "label": "Questions" },
+                            { "value": "90", "label": "Minutes" },
+                            { "value": "75%", "label": "Passing Score" },
+                            { "value": "1", "label": "Free Retake" }
+                        ]},
+                        { "type": "nested", "title": "Exam Requirements", "content": [
+                            { "type": "list", "items": [
+                                "Online proctored exam",
+                                "Requires webcam + microphone",
+                                "Auto-scored within ~24 hours",
+                                "One free retake included"
+                            ]}
+                        ]},
+                        { "type": "nested", "title": "KCNA Exam Domains", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Kubernetes Fundamentals — 46%</strong>",
+                                "Container Orchestration — 22%",
+                                "Cloud-Native Architecture — 16%",
+                                "Cloud-Native Observability — 8%",
+                                "Cloud-Native App Delivery — 8%"
+                            ]}
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Certification Path Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Which certification is entry-level and multiple-choice?",
+                        "options": ["CKAD", "KCNA", "CKA"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which certification requires a valid CKA?",
+                        "options": ["KCNA", "CKAD", "CKS"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What is the KCNA passing score?",
+                        "options": ["66%", "75%", "80%"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "How many questions are on the KCNA exam?",
+                        "options": ["40", "60", "100"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is the largest KCNA exam domain?",
+                        "options": ["Container Orchestration (22%)", "Kubernetes Fundamentals (46%)", "Cloud-Native Architecture (16%)"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "📖", "title": "OSS & Open Standards", "text": "Open source enables collaboration; OCI standardizes containers" },
+        { "icon": "🏛️", "title": "Linux Foundation & CNCF", "text": "CNCF makes cloud-native ubiquitous since 2015" },
+        { "icon": "📊", "title": "Maturity Levels", "text": "Sandbox → Incubating → Graduated" },
+        { "icon": "👥", "title": "Cloud Roles", "text": "Architect, DevOps, SRE, FinOps, and more" },
+        { "icon": "🎓", "title": "Certifications", "text": "KCNA → CKAD → CKA → CKS" }
+    ]
+}

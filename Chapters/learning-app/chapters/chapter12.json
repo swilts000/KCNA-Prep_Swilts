@@ -1,0 +1,286 @@
+{
+    "title": "Chapter 12: Practicing for the KCNA Exam with Mock Papers",
+    "subtitle": "Prepare for the KCNA certification with exam tips and mock exams",
+    "themeColor": "#2ecc71",
+    "themeColorDark": "#27ae60",
+    "lessons": [
+        {
+            "title": "Lesson 1: About the KCNA Exam",
+            "navTitle": "About KCNA Exam",
+            "cards": [
+                {
+                    "title": "What is KCNA?",
+                    "content": [
+                        { "type": "concept", "title": "KCNA", "value": "Kubernetes and Cloud Native Associate - an entry-level certification offered by the Cloud Native Computing Foundation (CNCF)." },
+                        { "type": "text", "value": "KCNA tests foundational knowledge across:" },
+                        { "type": "tags", "items": [
+                            "Kubernetes architecture and resources",
+                            "Cloud Native concepts",
+                            "CI/CD and GitOps",
+                            "Observability",
+                            "Microservices and container fundamentals"
+                        ]},
+                        { "type": "keypoint", "badge": "Level", "value": "KCNA is an entry-level certification, perfect for beginners starting their cloud-native journey." }
+                    ]
+                },
+                {
+                    "title": "What KCNA Covers",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "⚙️", "title": "Kubernetes", "text": "Architecture, resources, fundamentals" },
+                            { "icon": "☁️", "title": "Cloud Native", "text": "Concepts and principles" },
+                            { "icon": "🔄", "title": "CI/CD", "text": "Continuous integration and delivery" },
+                            { "icon": "🔀", "title": "GitOps", "text": "Git-based operations" },
+                            { "icon": "📊", "title": "Observability", "text": "Monitoring and logging" },
+                            { "icon": "📦", "title": "Containers", "text": "Microservices fundamentals" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Official Resources",
+                    "content": [
+                        { "type": "text", "value": "<strong>Official KCNA Resources:</strong>" },
+                        { "type": "list", "items": [
+                            "https://www.cncf.io/certification/kcna/",
+                            "https://training.linuxfoundation.org/certification/kubernetes-cloud-native-associate/"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "KCNA Overview Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What does KCNA stand for?",
+                        "options": ["Kubernetes Cloud Native Associate", "Kubernetes Certified Network Administrator", "Kubernetes Container Native Application", "Kubernetes Cloud Network Architecture"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Who offers the KCNA certification?",
+                        "options": ["Cloud Native Computing Foundation (CNCF)", "Linux Foundation only", "Google", "Amazon"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "What type of certification is KCNA?",
+                        "options": ["Entry-level", "Expert-level", "Intermediate-level", "Senior-level"],
+                        "answer": "0"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Exam Format and Rules",
+            "navTitle": "Exam Format & Rules",
+            "cards": [
+                {
+                    "title": "Exam Format",
+                    "content": [
+                        { "type": "highlight", "value": "KCNA Exam Format" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🌐", "title": "Online", "text": "Remotely proctored" },
+                            { "icon": "📝", "title": "60 Questions", "text": "Multiple choice" },
+                            { "icon": "⏱️", "title": "90 Minutes", "text": "Time limit" },
+                            { "icon": "🖥️", "title": "Single Screen", "text": "No multiple monitors" },
+                            { "icon": "📷", "title": "Webcam", "text": "Required" },
+                            { "icon": "🎤", "title": "Microphone", "text": "Required" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Exam Rules",
+                    "content": [
+                        { "type": "text", "value": "<strong>Strict rules to avoid disqualification:</strong>" },
+                        { "type": "list", "items": [
+                            "❌ No notes, books, or external materials",
+                            "❌ No public spaces or other people in the room",
+                            "❌ No eating (water in transparent container allowed)",
+                            "❌ If internet drops, you may rejoin but time continues"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Environment Requirements",
+                    "content": [
+                        { "type": "nested", "title": "Before the Exam", "content": [
+                            { "type": "list", "items": [
+                                "Quiet, private room with closed door",
+                                "Clean desk with no materials",
+                                "Working webcam and microphone",
+                                "Stable internet connection",
+                                "Valid government ID",
+                                "Compatible browser and system"
+                            ]}
+                        ]},
+                        { "type": "keypoint", "badge": "Important", "value": "Follow exam rules carefully to avoid disqualification." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Exam Rules Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "How many questions are on the KCNA exam?",
+                        "options": ["50", "60", "70", "80"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "How long is the KCNA exam?",
+                        "options": ["60 minutes", "90 minutes", "120 minutes", "180 minutes"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which of the following is allowed during the exam?",
+                        "options": ["Notes and books", "Other people in the room", "Water in transparent container", "Eating snacks"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What happens if your internet drops during the exam?",
+                        "options": ["Exam is cancelled", "Time is paused", "You may rejoin but time continues", "You get extra time"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Exam Strategy Tips",
+            "navTitle": "Exam Strategy",
+            "cards": [
+                {
+                    "title": "Test-Taking Strategy",
+                    "content": [
+                        { "type": "highlight", "value": "Effective Exam Strategy" },
+                        { "type": "list", "items": [
+                            "📖 Read each question fully before choosing an answer",
+                            "🔖 If unsure, mark the question and move on",
+                            "⏱️ Don't spend too long on any single question",
+                            "↩️ After answering all questions, return to marked ones",
+                            "😌 Stay calm and maintain a steady pace"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Time Management",
+                    "content": [
+                        { "type": "concept", "title": "Pacing", "value": "With 60 questions in 90 minutes, you have approximately 1.5 minutes per question. Use your time wisely." },
+                        { "type": "keypoint", "badge": "Tip", "value": "If you're stuck on a question after 2 minutes, mark it and move on. You can always come back." }
+                    ]
+                },
+                {
+                    "title": "Question Analysis",
+                    "content": [
+                        { "type": "nested", "title": "Reading Questions", "content": [
+                            { "type": "list", "items": [
+                                "Read the entire question carefully",
+                                "Look for keywords like 'NOT', 'EXCEPT', 'BEST'",
+                                "Eliminate obviously wrong answers first",
+                                "Consider the context of the question",
+                                "Trust your first instinct if uncertain"
+                            ]}
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Exam Strategy Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What should you do if you're unsure about a question?",
+                        "options": ["Spend extra time on it", "Mark it and move on", "Guess immediately", "Skip it without marking"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Approximately how much time do you have per question?",
+                        "options": ["1 minute", "1.5 minutes", "2 minutes", "3 minutes"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What should you do after answering all questions?",
+                        "options": ["Submit immediately", "Take a break", "Return to marked questions", "Review every question"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Mock Exam Practice",
+            "navTitle": "Mock Exams",
+            "cards": [
+                {
+                    "title": "Mock Exam Overview",
+                    "content": [
+                        { "type": "text", "value": "Two full mock exams are provided to help you evaluate your readiness." },
+                        { "type": "highlight", "value": "Scoring: (Number of correct answers × 100) / 60 = Your score (%)" },
+                        { "type": "keypoint", "badge": "Recommendation", "value": "If your score is lower than expected, revisit weak topics and attempt Mock Exam B after a break." }
+                    ]
+                },
+                {
+                    "title": "Mock Exam A Sample",
+                    "content": [
+                        { "type": "text", "value": "<strong>Sample Question from Mock Exam A:</strong>" },
+                        { "type": "quote", "value": "You're planning a deployment of a Kubernetes cluster in your organization. There is a requirement to make the control plane highly available. How many control plane nodes should be deployed?" },
+                        { "type": "tags", "items": ["A. 1", "B. 2", "C. 3", "D. 4"] },
+                        { "type": "keypoint", "badge": "Answer", "value": "C. 3 - For high availability, an odd number of control plane nodes (typically 3 or 5) is recommended." }
+                    ]
+                },
+                {
+                    "title": "Mock Exam B Sample",
+                    "content": [
+                        { "type": "text", "value": "<strong>Sample Question from Mock Exam B:</strong>" },
+                        { "type": "quote", "value": "Which of the following are valid telemetry signals?" },
+                        { "type": "tags", "items": ["A. Measurements, traces, logs", "B. Pings, traces, logs", "C. Metadata, traces, logs", "D. Metrics, traces, logs"] },
+                        { "type": "keypoint", "badge": "Answer", "value": "D. Metrics, traces, logs - These are the three core telemetry signals." }
+                    ]
+                },
+                {
+                    "title": "Using Mock Exams",
+                    "content": [
+                        { "type": "list", "items": [
+                            "Take Mock Exam A under timed conditions",
+                            "Review your answers and identify weak areas",
+                            "Study the topics you missed",
+                            "Take Mock Exam B after a break",
+                            "Repeat until you're confident"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Sample Mock Exam Questions",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "How many control plane nodes should be deployed for high availability?",
+                        "options": ["1", "2", "3", "4"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which of the following are valid telemetry signals?",
+                        "options": ["Measurements, traces, logs", "Pings, traces, logs", "Metadata, traces, logs", "Metrics, traces, logs"],
+                        "answer": "3"
+                    },
+                    {
+                        "question": "Which project can be used to implement Serverless on Kubernetes?",
+                        "options": ["Knative", "KubeVirt", "KubeConf", "Docker"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Which container runtime adds an intermediate kernel layer for sandboxing?",
+                        "options": ["containerd", "gVisor", "Kata", "dockerd"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "📜", "title": "KCNA Exam", "text": "Entry-level CNCF certification" },
+        { "icon": "⏱️", "title": "90 Minutes", "text": "60 multiple-choice questions" },
+        { "icon": "📋", "title": "Rules", "text": "Strict proctoring requirements" },
+        { "icon": "🎯", "title": "Strategy", "text": "Read carefully, pace yourself" },
+        { "icon": "📝", "title": "Mock Exams", "text": "Practice with full tests" },
+        { "icon": "✅", "title": "Ready", "text": "You're prepared for exam day" }
+    ]
+}

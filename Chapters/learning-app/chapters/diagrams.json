@@ -1,0 +1,92 @@
+{
+  "chapter2.json": [
+    {
+      "lesson": 0,
+      "title": "CNCF Ecosystem",
+      "format": "mermaid",
+      "source": "graph LR\n  LF[Linux Foundation] --> CNCF[Cloud Native Computing Foundation]\n  CNCF --> Projects((Projects))\n  Projects --> K8s[Kubernetes]\n  Projects --> Prom[Prometheus]\n  Projects --> Envoy[Envoy]",
+      "caption": "How the Linux Foundation, CNCF, and projects relate"
+    }
+  ],
+  "chapter3.json": [
+    {
+      "lesson": 0,
+      "title": "Docker Architecture",
+      "format": "mermaid",
+      "source": "graph LR\n  CLI[Docker CLI] --> Daemon[dockerd]\n  Daemon --> Container[Container]\n  Daemon --> Registry[Registry]\n  Registry --> Daemon",
+      "caption": "Docker client, daemon, containers, and registries"
+    }
+  ],
+  "chapter4.json": [
+    {
+      "lesson": 0,
+      "title": "Runtime & Interface Stack",
+      "format": "mermaid",
+      "source": "graph TD\n  App --> ContainerRuntime[Container Runtime]\n  ContainerRuntime --> OCI[OCI Runtime]\n  ContainerRuntime --> CRI[CRI Plugin]\n  CRI --> Kubelet[Kubelet]",
+      "caption": "How runtimes, CRI and kubelet interact"
+    }
+  ],
+  "chapter5.json": [
+    {
+      "lesson": 0,
+      "title": "Kubernetes Control Plane",
+      "format": "mermaid",
+      "source": "graph LR\n  Users --> API[API Server]\n  API --> Scheduler[Scheduler]\n  API --> Controller[Controller Manager]\n  API --> Etcd[etcd]\n  Nodes --> Kubelet[Kubelet] --> Pods[Pods]",
+      "caption": "Core Kubernetes control plane components"
+    }
+  ],
+  "chapter6.json": [
+    {
+      "lesson": 0,
+      "title": "Deployments & Services",
+      "format": "mermaid",
+      "source": "graph LR\n  User --> Deployment[Deployment] --> ReplicaSet[ReplicaSet] --> Pod[Pod]\n  Service[Service] --> Pod\n  Ingress --> Service",
+      "caption": "Deployment creates ReplicaSets and Pods; Services and Ingress route traffic"
+    }
+  ],
+  "chapter7.json": [
+    {
+      "lesson": 0,
+      "title": "Scheduler Placement Flow",
+      "format": "mermaid",
+      "source": "sequenceDiagram\n  participant S as Scheduler\n  participant API as API Server\n  participant Node as Node\n  S->>API: Watch pending pods\n  S->>Node: Select node based on resources\n  S->>API: Bind pod to node",
+      "caption": "High-level scheduler flow for placing pods onto nodes"
+    }
+  ],
+  "chapter8.json": [
+    {
+      "lesson": 0,
+      "title": "CI/CD Flow",
+      "format": "mermaid",
+      "source": "graph LR\n  Dev --> Repo[Git Repository]\n  Repo --> CI[CI Pipeline]\n  CI --> Image[Container Image]\n  Image --> Registry[Registry]\n  Registry --> CD[CD Pipeline]\n  CD --> Cluster[Kubernetes Cluster]",
+      "caption": "Typical CI/CD pipeline for cloud-native apps"
+    }
+  ],
+  "chapter9.json": [
+    {
+      "lesson": 0,
+      "title": "Cloud Native Architecture",
+      "format": "mermaid",
+      "source": "graph LR\n  Clients --> LB[Load Balancer]\n  LB --> Service1[Service A]\n  LB --> Service2[Service B]\n  Service1 --> DB[Database]\n  Service1 --> Observability[Tracing/Monitoring]",
+      "caption": "Microservices, load balancer, database, and observability"
+    }
+  ],
+  "chapter10.json": [
+    {
+      "lesson": 0,
+      "title": "Telemetry Pipeline",
+      "format": "mermaid",
+      "source": "graph LR\n  App --> Instrumentation[Instrumentation]\n  Instrumentation --> Exporter[Exporter]\n  Exporter --> Collector[Collector]\n  Collector --> Backend[Backend/Tracing/Logs/Metrics]",
+      "caption": "How telemetry flows from apps to a backend"
+    }
+  ],
+  "chapter11.json": [
+    {
+      "lesson": 0,
+      "title": "Automation Pipeline",
+      "format": "mermaid",
+      "source": "graph LR\n  Code --> Build[Build]\n  Build --> Test[Test]\n  Test --> Image[Image]\n  Image --> Deploy[Deploy]\n  Deploy --> Monitor[Monitor]",
+      "caption": "Automation steps for delivering cloud-native apps"
+    }
+  ]
+}

@@ -1,0 +1,420 @@
+{
+    "title": "Chapter 9: Understanding Cloud Native Architectures",
+    "subtitle": "Resiliency, autoscaling, serverless, and architectural best practices",
+    "themeColor": "#8b5cf6",
+    "themeColorDark": "#7c3aed",
+    "lessons": [
+        {
+            "title": "Lesson 1: Cloud Native Definition",
+            "navTitle": "Cloud Native Definition",
+            "cards": [
+                {
+                    "title": "What is Cloud Native?",
+                    "content": [
+                        { "type": "quote", "value": "Cloud Native is an approach to building and running applications on modern, dynamic infrastructures such as clouds. It emphasizes application workloads with high resiliency, scalability, a high degree of automation, ease of management, and observability." },
+                        { "type": "keypoint", "badge": "Key Insight", "value": "It's an approach, not a location — Cloud Native principles can be applied on-premises as well as in public clouds." }
+                    ]
+                },
+                {
+                    "title": "Cloud Native Pillars",
+                    "content": [
+                        { "type": "grid", "columns": 5, "items": [
+                            { "icon": "💪", "title": "Resiliency", "text": "Recover from failures" },
+                            { "icon": "📈", "title": "Scalability", "text": "Handle varying load" },
+                            { "icon": "🤖", "title": "Automation", "text": "Reduce manual work" },
+                            { "icon": "🎛️", "title": "Manageability", "text": "Easy to operate" },
+                            { "icon": "👁️", "title": "Observability", "text": "Understand system state" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Cloud Native vs Traditional",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Traditional Approach", "rightTitle": "Cloud Native Approach",
+                            "left": ["Monolithic applications", "Manual scaling", "Long release cycles", "Pets (unique servers)", "Reactive to failures"],
+                            "right": ["Microservices architecture", "Automatic scaling", "Continuous delivery", "Cattle (replaceable instances)", "Designed for failure"]
+                        }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Cloud Native Definition Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Is Cloud Native limited to public clouds?",
+                        "options": ["Yes, only public clouds", "No, it's an approach that works anywhere", "Only for AWS", "Only for containers"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are Cloud Native pillars? (Select all that apply)",
+                        "options": [
+                            { "text": "Resiliency", "value": "resiliency" },
+                            { "text": "Scalability", "value": "scalability" },
+                            { "text": "Manual operations", "value": "manual" },
+                            { "text": "Observability", "value": "observability" }
+                        ],
+                        "answer": ["resiliency", "scalability", "observability"],
+                        "multi": true
+                    },
+                    {
+                        "question": "What does 'cattle not pets' mean?",
+                        "options": ["Use animal names for servers", "Treat instances as replaceable, not unique", "Run on farms", "Avoid virtualization"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Architecture Patterns",
+            "navTitle": "Architecture Patterns",
+            "cards": [
+                {
+                    "title": "Microservices Architecture",
+                    "content": [
+                        { "type": "highlight", "value": "Small, loosely coupled services that enable independent development, scaling, and deployment" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "✅", "title": "Benefits", "text": "Independent scaling, deployment, and team ownership" },
+                            { "icon": "⚠️", "title": "Trade-off", "text": "Increased operational complexity" }
+                        ]},
+                        { "type": "text", "value": "Microservices pair well with <strong>containers</strong> and <strong>orchestration</strong> (Kubernetes)." }
+                    ]
+                },
+                {
+                    "title": "Containers + Orchestration",
+                    "content": [
+                        { "type": "text", "value": "The combination of containers (packaging) and Kubernetes (orchestration) enables:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "💚", "title": "Self-Healing", "text": "Automatic recovery from failures" },
+                            { "icon": "📈", "title": "Autoscaling", "text": "Scale based on demand" },
+                            { "icon": "🔄", "title": "Rolling Updates", "text": "Zero-downtime deployments" },
+                            { "icon": "👁️", "title": "Observability", "text": "Built-in metrics and logging" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Monolithic vs Microservices",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Monolithic", "rightTitle": "Microservices",
+                            "left": ["Single deployable unit", "Shared database", "Simpler to start", "Scale entire application", "Tight coupling"],
+                            "right": ["Multiple independent services", "Database per service", "Complex to operate", "Scale individual services", "Loose coupling"]
+                        },
+                        { "type": "keypoint", "badge": "When to Choose", "value": "Start monolithic for MVPs; migrate to microservices when team/scale demands it." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Architecture Patterns Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is a key benefit of microservices?",
+                        "options": ["Simpler operations", "Independent scaling and deployment", "Single codebase", "Shared database"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is a trade-off of microservices?",
+                        "options": ["Faster development", "Increased operational complexity", "Easier debugging", "Less code"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does Kubernetes provide for microservices? (Select all that apply)",
+                        "options": [
+                            { "text": "Self-healing", "value": "selfhealing" },
+                            { "text": "Autoscaling", "value": "autoscaling" },
+                            { "text": "Rolling updates", "value": "rolling" },
+                            { "text": "Code compilation", "value": "compile" }
+                        ],
+                        "answer": ["selfhealing", "autoscaling", "rolling"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Resiliency & Autoscaling",
+            "navTitle": "Resiliency & Autoscaling",
+            "cards": [
+                {
+                    "title": "Resiliency (Self-Healing)",
+                    "content": [
+                        { "type": "highlight", "value": "Design for failure — systems should recover automatically without manual intervention" },
+                        { "type": "text", "value": "Kubernetes enables resiliency through its <strong>reconciliation loop</strong>:" },
+                        { "type": "list", "items": [
+                            "1️⃣ You declare desired state (e.g., 3 replicas)",
+                            "2️⃣ Controller continuously compares actual vs desired",
+                            "3️⃣ If a Pod fails, controller creates a new one",
+                            "4️⃣ System self-heals without manual intervention"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Autoscaling Types",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Horizontal Scaling ⭐", "rightTitle": "Vertical Scaling",
+                            "left": ["Scale OUT/IN", "Add/remove instances or replicas", "Preferred for Cloud Native", "More flexible", "No downtime"],
+                            "right": ["Scale UP/DOWN", "Increase/decrease instance size (CPU/RAM)", "More limited", "May require restart", "Has upper limits"]
+                        },
+                        { "type": "keypoint", "badge": "KCNA Tip", "value": "Horizontal scaling is preferred for Cloud Native applications." }
+                    ]
+                },
+                {
+                    "title": "Kubernetes Autoscalers",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "📊", "title": "HPA", "text": "Horizontal Pod Autoscaler — adjusts pod replicas based on metrics" },
+                            { "icon": "📈", "title": "VPA", "text": "Vertical Pod Autoscaler — adjusts container requests/limits" },
+                            { "icon": "🖥️", "title": "Cluster Autoscaler", "text": "Adjusts number of worker nodes (cloud integration)" }
+                        ]},
+                        { "type": "keypoint", "badge": "Remember", "value": "HPA → replicas | VPA → requests/limits | Cluster Autoscaler → nodes" }
+                    ]
+                },
+                {
+                    "title": "Autoscaler Comparison",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "title": "HPA", "text": "What: Pod count<br>When: CPU/memory/custom metrics exceed threshold<br>Speed: Fast (seconds)" },
+                            { "title": "VPA", "text": "What: Resource requests<br>When: Historical usage analysis<br>Speed: May restart pods" },
+                            { "title": "Cluster Autoscaler", "text": "What: Node count<br>When: Pods pending due to resources<br>Speed: Slower (minutes)" }
+                        ]},
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Scale both application (HPA/VPA) and infrastructure (Cluster Autoscaler) together." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Resiliency & Autoscaling Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What enables Kubernetes self-healing?",
+                        "options": ["Manual intervention", "Reconciliation loop", "Restart scripts", "Load balancer"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which scaling type is preferred for Cloud Native?",
+                        "options": ["Vertical scaling", "Horizontal scaling", "Manual scaling", "No scaling"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does HPA adjust?",
+                        "options": ["Node count", "Pod replicas", "Container requests/limits", "Cluster size"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does VPA adjust?",
+                        "options": ["Node count", "Pod replicas", "Container requests/limits", "Network policies"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which Kubernetes autoscalers exist? (Select all that apply)",
+                        "options": [
+                            { "text": "HPA (Horizontal Pod Autoscaler)", "value": "hpa" },
+                            { "text": "VPA (Vertical Pod Autoscaler)", "value": "vpa" },
+                            { "text": "Cluster Autoscaler", "value": "cluster" },
+                            { "text": "Network Autoscaler", "value": "network" }
+                        ],
+                        "answer": ["hpa", "vpa", "cluster"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Serverless / FaaS",
+            "navTitle": "Serverless / FaaS",
+            "cards": [
+                {
+                    "title": "What is Serverless?",
+                    "content": [
+                        { "type": "highlight", "value": "Event-driven functions where the provider manages servers, scaling, and patching" },
+                        { "type": "text", "value": "Billing is typically <strong>per invocation/time used</strong> — not charged while idle." },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "☁️", "title": "Cloud FaaS", "text": "AWS Lambda, Azure Functions, Google Cloud Functions" },
+                            { "icon": "☸️", "title": "K8s FaaS", "text": "Knative, OpenFaaS, Fn" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Serverless Pros vs Cons",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Pros ✅", "rightTitle": "Cons ❌",
+                            "left": ["Minimal ops burden", "Automatic scaling", "Cost efficient for spiky workloads", "Pay only when running"],
+                            "right": ["Cold starts (latency)", "Limited runtime control", "Harder observability/debugging", "Vendor lock-in risk"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Cold Starts Explained",
+                    "content": [
+                        { "type": "concept", "title": "What is a Cold Start?", "value": "When a function hasn't been invoked recently, the platform must initialize a new instance, causing latency on the first request." },
+                        { "type": "text", "value": "Cold starts are a key limitation of serverless for latency-sensitive applications." },
+                        { "type": "nested", "title": "Mitigation Strategies", "content": [
+                            { "type": "list", "items": [
+                                "Keep functions warm with periodic pings",
+                                "Use provisioned concurrency (if available)",
+                                "Optimize function initialization code"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Kubernetes-Based FaaS",
+                    "content": [
+                        { "type": "text", "value": "Run FaaS on Kubernetes to reduce vendor lock-in:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🚀", "title": "Knative", "text": "Google-backed, CNCF project, serverless on K8s" },
+                            { "icon": "⚡", "title": "OpenFaaS", "text": "Simple, portable functions on K8s" },
+                            { "icon": "🔧", "title": "Fn", "text": "Oracle-backed, container-native FaaS" }
+                        ]},
+                        { "type": "keypoint", "badge": "KCNA Tip", "value": "Know these K8s FaaS projects: Knative, OpenFaaS, Fn" }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Serverless Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "How is serverless typically billed?",
+                        "options": ["Monthly flat rate", "Per invocation/time used", "Per server", "Free"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is a cold start?",
+                        "options": ["Server crash", "Latency when initializing inactive function", "Network timeout", "Database error"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is a limitation of serverless?",
+                        "options": ["Too much control", "Cold starts and vendor lock-in", "Too cheap", "Too fast"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are Kubernetes-based FaaS options? (Select all that apply)",
+                        "options": [
+                            { "text": "Knative", "value": "knative" },
+                            { "text": "OpenFaaS", "value": "openfaas" },
+                            { "text": "Fn", "value": "fn" },
+                            { "text": "Docker Swarm", "value": "swarm" }
+                        ],
+                        "answer": ["knative", "openfaas", "fn"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Cloud Native Best Practices",
+            "navTitle": "Best Practices",
+            "cards": [
+                {
+                    "title": "Design for Failure",
+                    "content": [
+                        { "type": "list", "items": [
+                            "🖥️ Run <strong>multiple control plane and worker nodes</strong> across failure domains (AZs)",
+                            "📦 Run <strong>at least two replicas</strong> of critical services",
+                            "🌍 <strong>Spread replicas across topology</strong> using anti-affinity and topology spread",
+                            "🔄 Use <strong>reconciliation loops</strong> for self-healing"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Automation & Observability",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🤖", "title": "Automation", "text": "CI/CD, automated rollouts/rollbacks, infrastructure as code" },
+                            { "icon": "👁️", "title": "Observability", "text": "Metrics, logs, traces — instrument apps and platform" }
+                        ]},
+                        { "type": "text", "value": "Automation reduces time to market and human error. Observability helps understand system behavior." }
+                    ]
+                },
+                {
+                    "title": "Practical Checklist",
+                    "content": [
+                        { "type": "list", "items": [
+                            "✅ Set <strong>resource requests and limits</strong> for all workloads",
+                            "✅ Prefer <strong>loose coupling</strong> (microservices, event-driven)",
+                            "✅ Consider <strong>chaos testing</strong> (e.g., Chaos Monkey) to validate resiliency",
+                            "✅ Choose tools thoughtfully — containers + K8s are common, but evaluate serverless where it fits",
+                            "✅ Use <strong>health checks</strong> (liveness/readiness probes)"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "KCNA Exam Focus",
+                    "content": [
+                        { "type": "highlight", "value": "Key topics to remember for the exam:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "Definitions", "text": "Cloud Native, microservices, Serverless/FaaS" },
+                            { "title": "Autoscaling", "text": "HPA, VPA, Cluster Autoscaler and their roles" },
+                            { "title": "Resiliency", "text": "Self-healing, reconciliation loop" },
+                            { "title": "Serverless Billing", "text": "Per invocation/time, not charged while idle" },
+                            { "title": "K8s FaaS Projects", "text": "Knative, OpenFaaS, Fn" },
+                            { "title": "Scaling Preference", "text": "Horizontal > Vertical for Cloud Native" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Quick One-Liners",
+                    "content": [
+                        { "type": "nested", "title": "Memorize These", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Cloud Native:</strong> Approach emphasizing resiliency, scalability, automation, manageability, observability",
+                                "<strong>Microservices:</strong> Small, loosely coupled services with independent deployment and scaling",
+                                "<strong>Serverless:</strong> Event-driven functions with provider-managed infrastructure, billed per use",
+                                "<strong>Cold Start:</strong> Latency when initializing an inactive serverless function",
+                                "<strong>HPA:</strong> Adjusts pod replicas based on metrics",
+                                "<strong>VPA:</strong> Adjusts container resource requests/limits",
+                                "<strong>Cluster Autoscaler:</strong> Adjusts number of worker nodes"
+                            ]}
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Best Practices Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "How many replicas should critical services have at minimum?",
+                        "options": ["1", "At least 2", "Exactly 5", "10+"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is Chaos Monkey used for?",
+                        "options": ["Monitoring", "Controlled failure injection to test resiliency", "Load balancing", "Logging"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What reduces time to market and human error?",
+                        "options": ["Manual deployments", "Automation (CI/CD)", "More servers", "Longer release cycles"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which autoscaler adjusts pod replicas?",
+                        "options": ["VPA", "HPA", "Cluster Autoscaler", "Node Autoscaler"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What should you set for all production workloads? (Select all that apply)",
+                        "options": [
+                            { "text": "Resource requests", "value": "requests" },
+                            { "text": "Resource limits", "value": "limits" },
+                            { "text": "Health checks (probes)", "value": "probes" },
+                            { "text": "Root access", "value": "root" }
+                        ],
+                        "answer": ["requests", "limits", "probes"],
+                        "multi": true
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🌐", "title": "Cloud Native", "text": "Approach: resiliency, scalability, automation, observability" },
+        { "icon": "🧩", "title": "Microservices", "text": "Loosely coupled, independent scaling & deployment" },
+        { "icon": "📈", "title": "Autoscaling", "text": "HPA (replicas), VPA (resources), Cluster (nodes)" },
+        { "icon": "⚡", "title": "Serverless", "text": "Event-driven, pay-per-use, cold starts" },
+        { "icon": "✅", "title": "Best Practices", "text": "Design for failure, automate, observe, chaos test" }
+    ]
+}

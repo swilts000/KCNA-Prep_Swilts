@@ -1,0 +1,396 @@
+{
+    "title": "Chapter 3: Getting Started with Containers",
+    "subtitle": "Practical container usage, Docker tooling, and image building",
+    "themeColor": "#0db7ed",
+    "themeColorDark": "#0a8ac4",
+    "lessons": [
+        {
+            "title": "Lesson 1: Introducing Docker",
+            "navTitle": "Introducing Docker",
+            "cards": [
+                {
+                    "title": "What is Docker?",
+                    "content": [
+                        { "type": "text", "value": "Docker is widely associated with containers, but the term refers to many related components:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🏢", "title": "Docker Inc.", "text": "The company" },
+                            { "icon": "⚙️", "title": "Docker Engine", "text": "Core runtime" },
+                            { "icon": "🖥️", "title": "Docker CLI", "text": "Command-line tool" },
+                            { "icon": "📦", "title": "Docker Hub", "text": "Public registry" },
+                            { "icon": "🗄️", "title": "Docker Registry", "text": "Self-hosted registry" },
+                            { "icon": "🐝", "title": "Docker Swarm", "text": "Native orchestrator" },
+                            { "icon": "📝", "title": "Docker Compose", "text": "Multi-container YAML" },
+                            { "icon": "💻", "title": "Docker Desktop", "text": "GUI for Win/Mac" },
+                            { "icon": "🔌", "title": "dockerd", "text": "The daemon process" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Docker Engine",
+                    "content": [
+                        { "type": "text", "value": "Docker Engine is the core client-server system. It includes:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔧", "title": "dockerd", "text": "The daemon that manages containers and exposes a REST API" },
+                            { "icon": "⌨️", "title": "docker CLI", "text": "Command-line tool to interact with the daemon" }
+                        ]},
+                        { "type": "concept", "title": "Containerization", "value": "Packages application code together with its dependencies so it can run consistently across environments." },
+                        { "type": "nested", "title": "Docker Architecture", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Client</strong> → sends commands (docker build, run, pull)",
+                                "<strong>Daemon</strong> → builds, runs, and manages containers",
+                                "<strong>Registry</strong> → stores and distributes images"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Docker Hub & Registries",
+                    "content": [
+                        { "type": "highlight", "value": "Docker Hub is a public registry hosting thousands of container images" },
+                        { "type": "text", "value": "Popular images include: Ubuntu, Alpine, Nginx, MySQL, Redis, and more." },
+                        { "type": "nested", "title": "Other Registries", "content": [
+                            { "type": "tags", "items": [
+                                { "text": "Docker Hub", "primary": true },
+                                "Quay",
+                                "Google Container Registry",
+                                "Amazon ECR"
+                            ]},
+                            { "type": "text", "value": "<strong>Docker Registry</strong> is the open-source server software organizations can run internally." }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Docker Swarm, Compose & Desktop",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🐝", "title": "Docker Swarm", "text": "Docker's native orchestrator. Simpler than K8s, less widely adopted." },
+                            { "icon": "📝", "title": "Docker Compose", "text": "Defines multi-container apps using YAML. Great for local dev." },
+                            { "icon": "💻", "title": "Docker Desktop", "text": "Bundles Engine, CLI, Compose, K8s, and GUI for Win/Mac." }
+                        ]},
+                        { "type": "keypoint", "badge": "Deprecated", "value": "Dockershim was a compatibility layer for Kubernetes. It was removed in Kubernetes 1.24 when K8s adopted OCI-standard runtimes." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Docker Components Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is the Docker daemon called?",
+                        "options": ["docker", "dockerd", "docker-engine", "containerd"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which is Docker's public image registry?",
+                        "options": ["Quay", "Docker Hub", "Amazon ECR", "Docker Registry"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What was removed in Kubernetes 1.24?",
+                        "options": ["Docker Compose", "Docker Swarm", "Dockershim", "Docker Desktop"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What does Docker Compose use to define multi-container apps?",
+                        "options": ["JSON", "YAML", "XML", "TOML"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Container Technology",
+            "navTitle": "Container Technology",
+            "cards": [
+                {
+                    "title": "Linux Kernel Features",
+                    "content": [
+                        { "type": "text", "value": "Linux containers rely on two kernel features:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📊", "title": "cgroups", "text": "Control Groups - limit and monitor resource usage" },
+                            { "icon": "🔒", "title": "Namespaces", "text": "Isolate processes with separate views of resources" }
+                        ]},
+                        { "type": "keypoint", "badge": "Foundation", "value": "Together, cgroups and namespaces form the foundation of container isolation and resource control." }
+                    ]
+                },
+                {
+                    "title": "Control Groups (cgroups)",
+                    "content": [
+                        { "type": "text", "value": "cgroups limit and monitor resource usage such as:" },
+                        { "type": "tags", "items": [
+                            { "text": "CPU", "primary": true },
+                            { "text": "Memory", "primary": true },
+                            { "text": "I/O", "primary": true },
+                            { "text": "Network", "primary": true }
+                        ]},
+                        { "type": "example", "title": "Use Case", "value": "Prevent a single container from consuming all available memory on the host." }
+                    ]
+                },
+                {
+                    "title": "Namespaces",
+                    "content": [
+                        { "type": "text", "value": "Namespaces isolate processes so they see separate views of system resources." },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "👤", "title": "User", "text": "User and group IDs" },
+                            { "icon": "🔢", "title": "PID", "text": "Process IDs" },
+                            { "icon": "🌐", "title": "Network", "text": "Network interfaces" },
+                            { "icon": "📁", "title": "Mount", "text": "Filesystem mounts" },
+                            { "icon": "💬", "title": "IPC", "text": "Inter-process communication" },
+                            { "icon": "🏷️", "title": "UTS", "text": "Hostname and domain" }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Container Technology Quiz",
+                "type": "dragdrop",
+                "instructions": "Categorize each feature:",
+                "zones": [
+                    { "id": "cgroups", "title": "cgroups" },
+                    { "id": "namespaces", "title": "Namespaces" }
+                ],
+                "items": [
+                    { "text": "Limit CPU usage", "zone": "cgroups" },
+                    { "text": "Isolate process IDs", "zone": "namespaces" },
+                    { "text": "Monitor memory usage", "zone": "cgroups" },
+                    { "text": "Separate network interfaces", "zone": "namespaces" },
+                    { "text": "Control I/O bandwidth", "zone": "cgroups" },
+                    { "text": "Isolate filesystem mounts", "zone": "namespaces" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Running Containers",
+            "navTitle": "Running Containers",
+            "cards": [
+                {
+                    "title": "Installing Docker",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🪟", "title": "Windows/macOS", "text": "Install Docker Desktop" },
+                            { "icon": "🐧", "title": "Linux", "text": "Install Docker Engine manually" }
+                        ]},
+                        { "type": "text", "value": "Once installed, you can run a container:" },
+                        { "type": "concept", "title": "Run Ubuntu Container", "value": "docker run -it ubuntu:22.04 bash" },
+                        { "type": "text", "value": "If the image is not present locally, Docker pulls it from Docker Hub. Subsequent runs are faster because the image is cached." }
+                    ]
+                },
+                {
+                    "title": "Image Layers",
+                    "content": [
+                        { "type": "text", "value": "Each container receives its own <strong>writable layer</strong> on top of the <strong>read-only image layers</strong>." },
+                        { "type": "keypoint", "badge": "Key Concept", "value": "Multiple containers can be created from the same image without modifying the base image." },
+                        { "type": "nested", "title": "Layer Benefits", "content": [
+                            { "type": "grid", "columns": 2, "items": [
+                                { "icon": "💾", "title": "Space Efficient", "text": "Shared layers aren't duplicated" },
+                                { "icon": "⚡", "title": "Fast Builds", "text": "Only changed layers rebuild" },
+                                { "icon": "🔄", "title": "Caching", "text": "Layers are cached locally" },
+                                { "icon": "📦", "title": "Portable", "text": "Push/pull only changed layers" }
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Essential Docker Commands",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "docker images", "text": "List local images" },
+                            { "title": "docker ps", "text": "List running containers" },
+                            { "title": "docker ps --all", "text": "List all containers (including exited)" },
+                            { "title": "docker rm", "text": "Remove containers" },
+                            { "title": "docker rmi", "text": "Remove images" },
+                            { "title": "docker pull", "text": "Download an image" }
+                        ]},
+                        { "type": "example", "title": "Pull Image", "value": "docker pull centos — If no tag is specified, Docker uses the 'latest' tag by default." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Docker Commands Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Which command lists all containers including stopped ones?",
+                        "options": ["docker ps", "docker ps --all", "docker images", "docker containers"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command removes a container?",
+                        "options": ["docker delete", "docker rm", "docker rmi", "docker remove"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What happens if you run an image that isn't cached locally?",
+                        "options": ["Error occurs", "Docker pulls it from registry", "Container runs empty", "Docker builds it"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What tag does Docker use by default if none is specified?",
+                        "options": ["stable", "current", "latest", "default"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Building Container Images",
+            "navTitle": "Building Images",
+            "cards": [
+                {
+                    "title": "Two Ways to Build Images",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Interactive Method ❌", "rightTitle": "Dockerfile Method ✅",
+                            "left": ["Modify running container", "Run docker commit", "Manual and error-prone", "Not reproducible"],
+                            "right": ["Define steps in Dockerfile", "Run docker build", "Automated and consistent", "Version controlled"]
+                        },
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Always use Dockerfiles for reproducible, version-controlled image builds." }
+                    ]
+                },
+                {
+                    "title": "Dockerfile Example",
+                    "content": [
+                        { "type": "concept", "title": "Sample Dockerfile", "value": "FROM ubuntu:22.04<br>RUN apt-get update && apt-get install -y curl vim<br>LABEL description=\"My first Docker image\"" },
+                        { "type": "text", "value": "Build the image:" },
+                        { "type": "highlight", "value": "docker build . -t myubuntuimage" }
+                    ]
+                },
+                {
+                    "title": "Dockerfile Instructions",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "FROM", "text": "Base image to start from" },
+                            { "title": "RUN", "text": "Execute commands during build" },
+                            { "title": "LABEL", "text": "Add metadata" },
+                            { "title": "ADD", "text": "Copy files or URLs" },
+                            { "title": "COPY", "text": "Copy local files" },
+                            { "title": "CMD", "text": "Default command to run" },
+                            { "title": "ENTRYPOINT", "text": "Executable for the container" },
+                            { "title": "EXPOSE", "text": "Document port information" },
+                            { "title": "ENV", "text": "Set environment variables" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "About the 'latest' Tag",
+                    "content": [
+                        { "type": "list", "items": [
+                            "Applied automatically if no tag is specified",
+                            "Pulled automatically if no tag is specified",
+                            "<strong>Does NOT mean \"newest\"</strong> — it's just a label"
+                        ]},
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Use meaningful version tags (e.g., v1.2.3, 22.04) instead of relying on 'latest'." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Dockerfile Instructions Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Which instruction specifies the base image?",
+                        "options": ["BASE", "FROM", "IMAGE", "START"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which instruction sets the default command?",
+                        "options": ["RUN", "EXEC", "CMD", "DEFAULT"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which method is recommended for building images?",
+                        "options": ["docker commit", "Dockerfile", "docker save", "docker export"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does the 'latest' tag actually mean?",
+                        "options": ["Most recent version", "Stable version", "Just a label (no special meaning)", "Production ready"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which instructions copy files? (Select all that apply)",
+                        "options": [
+                            { "text": "ADD", "value": "add" },
+                            { "text": "COPY", "value": "copy" },
+                            { "text": "RUN", "value": "run" },
+                            { "text": "MOVE", "value": "move" }
+                        ],
+                        "answer": ["add", "copy"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Development Workflow",
+            "navTitle": "Dev Workflow",
+            "cards": [
+                {
+                    "title": "Container Development Workflow",
+                    "content": [
+                        { "type": "text", "value": "A typical container-based development workflow:" },
+                        { "type": "list", "items": [
+                            "1️⃣ Developers write application code",
+                            "2️⃣ Code is pushed to version control",
+                            "3️⃣ CI/CD builds a container image using a Dockerfile",
+                            "4️⃣ The image is tagged and pushed to a registry",
+                            "5️⃣ Kubernetes or another runtime pulls and runs the image"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Container Portability",
+                    "content": [
+                        { "type": "highlight", "value": "Containers are portable across Linux environments" },
+                        { "type": "text", "value": "Images stored in registries can be shared and deployed anywhere." },
+                        { "type": "keypoint", "badge": "KCNA Focus", "value": "KCNA focuses exclusively on Linux containers. Windows containers exist but behave differently." }
+                    ]
+                },
+                {
+                    "title": "Why Containers Solve Environment Problems",
+                    "content": [
+                        { "type": "text", "value": "Containers solve the problem of inconsistent environments by:" },
+                        { "type": "list", "items": [
+                            "📦 Packaging applications with their dependencies",
+                            "🔄 Running consistently across dev, test, and production",
+                            "🚀 Enabling fast, reproducible deployments",
+                            "☁️ Working seamlessly with orchestrators like Kubernetes"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Workflow Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What builds the container image in a typical CI/CD workflow?",
+                        "options": ["Developer manually", "CI/CD pipeline using Dockerfile", "Kubernetes", "Docker Hub"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Where are images stored for sharing and deployment?",
+                        "options": ["Local filesystem", "Version control", "Container registry", "Kubernetes cluster"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What type of containers does KCNA focus on?",
+                        "options": ["Windows containers", "Linux containers", "Both equally", "macOS containers"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What problem do containers solve?",
+                        "options": ["Network latency", "Inconsistent environments", "Database scaling", "Code compilation"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🐳", "title": "Docker Ecosystem", "text": "Engine, CLI, Hub, Compose, Desktop, and more" },
+        { "icon": "🔧", "title": "Kernel Features", "text": "cgroups (resources) + namespaces (isolation)" },
+        { "icon": "▶️", "title": "Running Containers", "text": "docker run, ps, rm, pull commands" },
+        { "icon": "📄", "title": "Dockerfiles", "text": "FROM, RUN, COPY, CMD instructions" },
+        { "icon": "🔄", "title": "Dev Workflow", "text": "Code → Build → Push → Deploy" }
+    ]
+}

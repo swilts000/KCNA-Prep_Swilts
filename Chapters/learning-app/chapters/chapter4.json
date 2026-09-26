@@ -1,0 +1,430 @@
+{
+    "title": "Chapter 4: Exploring Container Runtimes, Interfaces, and Service Meshes",
+    "subtitle": "Runtimes, networking, storage, security, and service meshes",
+    "themeColor": "#ff6b6b",
+    "themeColorDark": "#ee5a5a",
+    "lessons": [
+        {
+            "title": "Lesson 1: Container Runtimes",
+            "navTitle": "Container Runtimes",
+            "cards": [
+                {
+                    "title": "What is a Container Runtime?",
+                    "content": [
+                        { "type": "quote", "value": "A container runtime is the software responsible for pulling images, creating containers, starting and stopping them, and managing their lifecycle." },
+                        { "type": "text", "value": "Kubernetes itself does not include a runtime; it relies on pluggable runtimes via the CRI interface." }
+                    ]
+                },
+                {
+                    "title": "Common Container Runtimes",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📦", "title": "containerd", "text": "Widely used, production-grade runtime" },
+                            { "icon": "🔧", "title": "CRI-O", "text": "Lightweight runtime designed for Kubernetes" },
+                            { "icon": "🛡️", "title": "Kata Containers", "text": "Runs workloads inside lightweight VMs for stronger isolation" },
+                            { "icon": "🔒", "title": "gVisor", "text": "Sandboxed runtime that intercepts syscalls for extra isolation" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "CRI (Container Runtime Interface)",
+                    "content": [
+                        { "type": "highlight", "value": "Kubernetes uses CRI (gRPC-based) to communicate with runtimes" },
+                        { "type": "text", "value": "CRI made it possible to support multiple runtimes in a cluster and removed the need for Kubernetes to be tied to Docker Engine." },
+                        { "type": "keypoint", "badge": "Key Benefit", "value": "CRI allows Kubernetes to work with any compliant runtime without code changes." }
+                    ]
+                },
+                {
+                    "title": "Runtime Types",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "⚡", "title": "Namespaced", "text": "Fastest, uses Linux namespaces & cgroups (containerd, CRI-O)" },
+                            { "icon": "🖥️", "title": "Virtualized", "text": "Each container in a lightweight VM (Kata). Strongest isolation, slower." },
+                            { "icon": "🛡️", "title": "Sandboxed", "text": "Syscall interception layer (gVisor). Balance of speed & isolation." }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Runtime Comparison",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "containerd / CRI-O", "rightTitle": "Kata / gVisor",
+                            "left": ["Fastest startup", "Lowest overhead", "Shares host kernel", "Standard isolation"],
+                            "right": ["Slower startup", "Higher overhead", "Separate kernel (Kata) or syscall filter (gVisor)", "Strongest isolation"]
+                        },
+                        { "type": "keypoint", "badge": "Choose Based On", "value": "Use namespaced runtimes for performance; use Kata/gVisor for multi-tenant or untrusted workloads." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Container Runtime Types",
+                "type": "dragdrop",
+                "instructions": "Categorize each runtime by its type:",
+                "zones": [
+                    { "id": "namespaced", "title": "Namespaced (Fastest)" },
+                    { "id": "virtualized", "title": "Virtualized (Strongest Isolation)" },
+                    { "id": "sandboxed", "title": "Sandboxed (Balanced)" }
+                ],
+                "items": [
+                    { "text": "containerd", "zone": "namespaced" },
+                    { "text": "CRI-O", "zone": "namespaced" },
+                    { "text": "Kata Containers", "zone": "virtualized" },
+                    { "text": "gVisor", "zone": "sandboxed" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Container Networking",
+            "navTitle": "Container Networking",
+            "cards": [
+                {
+                    "title": "Container Network Basics",
+                    "content": [
+                        { "type": "text", "value": "Each container typically gets its own:" },
+                        { "type": "tags", "items": [
+                            { "text": "Network namespace", "primary": true },
+                            { "text": "Virtual interface (eth0)", "primary": true },
+                            { "text": "IP address", "primary": true },
+                            { "text": "Routing table", "primary": true }
+                        ]},
+                        { "type": "text", "value": "Containers on the same host communicate via host-local networks. Multi-host communication requires <strong>overlay networking</strong>." }
+                    ]
+                },
+                {
+                    "title": "Docker Network Drivers",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🌉", "title": "bridge", "text": "Default. Containers on same bridge can talk. NAT for outbound." },
+                            { "icon": "🏠", "title": "host", "text": "Container shares host network namespace (no isolation)" },
+                            { "icon": "🚫", "title": "none", "text": "No networking for the container" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Overlay Networks",
+                    "content": [
+                        { "type": "concept", "title": "What are Overlay Networks?", "value": "Overlay networks encapsulate packets so containers on different hosts can communicate as if on the same L2/L3 network." },
+                        { "type": "text", "value": "Orchestrators and CNIs implement overlay networking for multi-host clusters." },
+                        { "type": "nested", "title": "How Overlay Works", "content": [
+                            { "type": "list", "items": [
+                                "1️⃣ Container sends packet to another container",
+                                "2️⃣ Packet is encapsulated (e.g., VXLAN)",
+                                "3️⃣ Travels over physical network",
+                                "4️⃣ Decapsulated at destination host",
+                                "5️⃣ Delivered to target container"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "CNI (Container Network Interface)",
+                    "content": [
+                        { "type": "highlight", "value": "Kubernetes uses CNI to support pluggable networking plugins" },
+                        { "type": "text", "value": "<strong>Popular CNI plugins:</strong>" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔗", "title": "Flannel", "text": "Simple overlay networking" },
+                            { "icon": "🐯", "title": "Calico", "text": "Networking + network policy enforcement" },
+                            { "icon": "🐝", "title": "Cilium", "text": "eBPF-based networking and security" },
+                            { "icon": "🕸️", "title": "Weave Net", "text": "Easy overlay networking" }
+                        ]},
+                        { "type": "keypoint", "badge": "Advanced", "value": "Multus can attach multiple network interfaces to pods." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Container Networking Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is the default Docker network driver?",
+                        "options": ["host", "bridge", "overlay", "none"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What interface does Kubernetes use for networking plugins?",
+                        "options": ["CRI", "CNI", "CSI", "OCI"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which CNI uses eBPF for networking and security?",
+                        "options": ["Flannel", "Calico", "Cilium", "Weave Net"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What do overlay networks enable?",
+                        "options": ["Faster local networking", "Multi-host container communication", "Container isolation", "Storage mounting"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which CNIs provide network policy enforcement? (Select all that apply)",
+                        "options": [
+                            { "text": "Flannel", "value": "flannel" },
+                            { "text": "Calico", "value": "calico" },
+                            { "text": "Cilium", "value": "cilium" },
+                            { "text": "Weave Net", "value": "weave" }
+                        ],
+                        "answer": ["calico", "cilium"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Container Storage",
+            "navTitle": "Container Storage",
+            "cards": [
+                {
+                    "title": "Ephemeral Containers",
+                    "content": [
+                        { "type": "keypoint", "badge": "Default Behavior", "value": "Containers are stateless by default: files written inside a container are lost when the container is removed." },
+                        { "type": "text", "value": "To persist data, external storage must be used." }
+                    ]
+                },
+                {
+                    "title": "Volumes",
+                    "content": [
+                        { "type": "text", "value": "Volumes decouple data from container lifecycle. They can be:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📁", "title": "Local host directories", "text": "Good for dev/testing, not production" },
+                            { "icon": "🌐", "title": "Network filesystems", "text": "NFS and similar" },
+                            { "icon": "💾", "title": "Block storage", "text": "iSCSI, cloud block volumes" },
+                            { "icon": "☁️", "title": "Cloud/vendor solutions", "text": "Via CSI drivers" }
+                        ]},
+                        { "type": "example", "title": "Docker Example", "value": "Attach a named volume and mount it inside the container so data persists across container restarts and removals." }
+                    ]
+                },
+                {
+                    "title": "Kubernetes Storage Concepts",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📦", "title": "PersistentVolume (PV)", "text": "Cluster-level storage resource" },
+                            { "icon": "📝", "title": "PersistentVolumeClaim (PVC)", "text": "Request for storage by a pod" },
+                            { "icon": "🏭", "title": "StorageClass", "text": "Defines storage provisioner and parameters" },
+                            { "icon": "🔄", "title": "Dynamic Provisioning", "text": "Automatic PV creation from PVC" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "CSI (Container Storage Interface)",
+                    "content": [
+                        { "type": "highlight", "value": "Kubernetes uses CSI to integrate pluggable storage backends" },
+                        { "type": "text", "value": "CSI drivers allow Kubernetes to provision, attach, and manage volumes from cloud providers and storage vendors." },
+                        { "type": "tags", "items": [
+                            { "text": "AWS EBS CSI", "primary": true },
+                            { "text": "NetApp Trident", "primary": true },
+                            { "text": "Azure Disk CSI", "primary": true },
+                            { "text": "GCE PD CSI", "primary": true }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Container Storage Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What happens to data inside a container when it's removed?",
+                        "options": ["It's backed up automatically", "It's lost", "It's moved to a volume", "It's compressed"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What interface does Kubernetes use for storage plugins?",
+                        "options": ["CRI", "CNI", "CSI", "SMI"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which storage type is NOT recommended for production?",
+                        "options": ["Network filesystems", "Local host directories", "Block storage", "Cloud volumes"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What do volumes provide?",
+                        "options": ["Network isolation", "Data persistence across container lifecycle", "CPU limits", "Security policies"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Container Security",
+            "navTitle": "Container Security",
+            "cards": [
+                {
+                    "title": "Kernel Sharing and Risk",
+                    "content": [
+                        { "type": "keypoint", "badge": "Security Risk", "value": "Namespaced containers share the host kernel. If a container is compromised, there is a risk to the host and other containers." },
+                        { "type": "text", "value": "The host kernel version is used by containers regardless of the container OS image." }
+                    ]
+                },
+                {
+                    "title": "Hardening Techniques",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🛡️", "title": "AppArmor / SELinux", "text": "Enforce access control policies (Ubuntu/RHEL)" },
+                            { "icon": "👤", "title": "Non-root users", "text": "Avoid running as root; use USER in Dockerfile" },
+                            { "icon": "🔢", "title": "UID mapping", "text": "Map container UIDs to non-root host UIDs" },
+                            { "icon": "✅", "title": "Trusted images", "text": "Build and host your own in private registries" },
+                            { "icon": "🔍", "title": "Image scanning", "text": "Integrate Anchore, Clair, or Dagda into CI" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Security Best Practices",
+                    "content": [
+                        { "type": "list", "items": [
+                            "✅ Minimize image contents (small base images)",
+                            "✅ Use least privilege for container processes",
+                            "✅ Keep images and dependencies up to date",
+                            "✅ Scan images for vulnerabilities regularly",
+                            "✅ Use security frameworks (AppArmor/SELinux)"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Container Security Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What do namespaced containers share with the host?",
+                        "options": ["Nothing", "The kernel", "The filesystem", "The network"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which Dockerfile instruction creates a non-root user?",
+                        "options": ["RUN", "USER", "NONROOT", "OWNER"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which tools scan container images for vulnerabilities? (Select all that apply)",
+                        "options": [
+                            { "text": "Anchore", "value": "anchore" },
+                            { "text": "Clair", "value": "clair" },
+                            { "text": "Dagda", "value": "dagda" },
+                            { "text": "Flannel", "value": "flannel" }
+                        ],
+                        "answer": ["anchore", "clair", "dagda"],
+                        "multi": true
+                    },
+                    {
+                        "question": "Which security framework is used on Ubuntu?",
+                        "options": ["SELinux", "AppArmor", "gVisor", "Kata"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Service Meshes",
+            "navTitle": "Service Meshes",
+            "cards": [
+                {
+                    "title": "What is a Service Mesh?",
+                    "content": [
+                        { "type": "quote", "value": "A service mesh is a dedicated infrastructure layer for making communication between services safe, observable, and reliable." },
+                        { "type": "text", "value": "Service meshes manage service-to-service communication without changing application code." }
+                    ]
+                },
+                {
+                    "title": "Why Use a Service Mesh?",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔐", "title": "mTLS", "text": "Automatic encryption and mutual authentication" },
+                            { "icon": "👁️", "title": "Observability", "text": "Metrics, tracing, and logs from sidecar proxies" },
+                            { "icon": "🚦", "title": "Traffic Management", "text": "Retries, timeouts, circuit breakers, canary rollouts" },
+                            { "icon": "💪", "title": "Reliability", "text": "Automatic retries, load balancing, fault injection" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "How Service Meshes Work",
+                    "content": [
+                        { "type": "text", "value": "A mesh typically injects a lightweight <strong>sidecar proxy</strong> next to each service instance." },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📡", "title": "Data Plane", "text": "The sidecar proxies that handle traffic" },
+                            { "icon": "🎛️", "title": "Control Plane", "text": "Configures proxies, manages certificates, service discovery" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Popular Service Meshes",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔗", "title": "Linkerd", "text": "Lightweight, CNCF project" },
+                            { "icon": "⛵", "title": "Istio", "text": "Feature-rich, uses Envoy proxy" },
+                            { "icon": "🌐", "title": "Open Service Mesh", "text": "CNCF project implementing SMI" },
+                            { "icon": "🔷", "title": "Consul Connect", "text": "HashiCorp's service mesh" }
+                        ]},
+                        { "type": "concept", "title": "SMI (Service Mesh Interface)", "value": "SMI defines a common, vendor-agnostic API for service meshes on Kubernetes, similar to CRI/CNI/CSI." }
+                    ]
+                },
+                {
+                    "title": "Kubernetes Interfaces Summary",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes uses pluggable interfaces for extensibility:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "⚙️", "title": "CRI", "text": "Container Runtime Interface - runtimes" },
+                            { "icon": "🌐", "title": "CNI", "text": "Container Network Interface - networking" },
+                            { "icon": "💾", "title": "CSI", "text": "Container Storage Interface - storage" },
+                            { "icon": "🕸️", "title": "SMI", "text": "Service Mesh Interface - service meshes" }
+                        ]},
+                        { "type": "keypoint", "badge": "Pattern", "value": "All interfaces follow the same pattern: define a standard API so Kubernetes can work with any compliant implementation." }
+                    ]
+                },
+                {
+                    "title": "Overlay Networks vs Service Meshes",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Overlay Networks", "rightTitle": "Service Meshes",
+                            "left": ["Operate at L2/L3 (network layer)", "Provide connectivity across hosts", "Handle packet routing"],
+                            "right": ["Operate at L7 (application layer)", "Provide security & observability", "Handle service-level traffic"]
+                        },
+                        { "type": "keypoint", "badge": "Key Point", "value": "They complement each other: overlay networks provide connectivity; service meshes provide secure, observable service traffic." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Service Meshes Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What does mTLS provide?",
+                        "options": ["Storage encryption", "Mutual authentication and encryption", "Network isolation", "Load balancing"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is injected next to each service in a mesh?",
+                        "options": ["Container", "Sidecar proxy", "Volume", "ConfigMap"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which service mesh uses Envoy as its proxy?",
+                        "options": ["Linkerd", "Istio", "Consul Connect", "Open Service Mesh"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "At which OSI layer do service meshes operate?",
+                        "options": ["L2 (Data Link)", "L3 (Network)", "L4 (Transport)", "L7 (Application)"],
+                        "answer": "3"
+                    },
+                    {
+                        "question": "Which are CNCF service mesh projects? (Select all that apply)",
+                        "options": [
+                            { "text": "Linkerd", "value": "linkerd" },
+                            { "text": "Istio", "value": "istio" },
+                            { "text": "Open Service Mesh", "value": "osm" },
+                            { "text": "Consul Connect", "value": "consul" }
+                        ],
+                        "answer": ["linkerd", "osm"],
+                        "multi": true
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "⚙️", "title": "Runtimes", "text": "CRI enables containerd, CRI-O, Kata, gVisor" },
+        { "icon": "🌐", "title": "Networking", "text": "CNI plugins: Flannel, Calico, Cilium, Weave" },
+        { "icon": "💾", "title": "Storage", "text": "CSI drivers for persistent volumes" },
+        { "icon": "🔒", "title": "Security", "text": "AppArmor/SELinux, non-root, image scanning" },
+        { "icon": "🕸️", "title": "Service Meshes", "text": "mTLS, observability via Linkerd, Istio, OSM" }
+    ]
+}

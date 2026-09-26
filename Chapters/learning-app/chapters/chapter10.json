@@ -1,0 +1,335 @@
+{
+    "title": "Chapter 10: Implementing Telemetry and Observability in the Cloud",
+    "subtitle": "Master monitoring, logging, and cost management for cloud-native applications",
+    "themeColor": "#ff6b6b",
+    "themeColorDark": "#e05555",
+    "lessons": [
+        {
+            "title": "Lesson 1: Telemetry and Observability",
+            "navTitle": "Telemetry & Observability",
+            "cards": [
+                {
+                    "title": "What is Telemetry?",
+                    "content": [
+                        { "type": "highlight", "value": "Telemetry = monitoring and collection of data about system performance" },
+                        { "type": "text", "value": "Telemetry includes three primary signal types:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "📝", "title": "Logs", "text": "Text-based event records" },
+                            { "icon": "📊", "title": "Metrics", "text": "Numeric measurements over time" },
+                            { "icon": "🔍", "title": "Traces", "text": "End-to-end request tracking" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "What is Observability?",
+                    "content": [
+                        { "type": "concept", "title": "Observability", "value": "The capability to generate actionable insights from telemetry signals. An observable system provides the right data at the right time to make informed decisions." },
+                        { "type": "keypoint", "badge": "Critical", "value": "Observability requires ALL three telemetry types. Relying on only logs or only metrics is insufficient for modern distributed systems." }
+                    ]
+                },
+                {
+                    "title": "Why All Three Signals?",
+                    "content": [
+                        { "type": "list", "items": [
+                            "<strong>Logs alone</strong> - Hard to correlate events across services",
+                            "<strong>Metrics alone</strong> - Don't show context or root cause",
+                            "<strong>Traces alone</strong> - Don't show system-wide patterns",
+                            "<strong>All three together</strong> = Complete picture for troubleshooting"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Telemetry Signals Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Which of the following are valid telemetry signals?",
+                        "options": ["Logs, Metrics, Traces", "Logs, Metrics, Events", "Metrics, Traces, Alerts", "Logs, Events, Traces"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Observability requires:",
+                        "options": ["Only logs", "Only metrics", "All three telemetry types", "Only traces"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which telemetry signal provides end-to-end request tracking?",
+                        "options": ["Logs", "Metrics", "Traces", "Alerts"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Logs, Metrics, and Traces",
+            "navTitle": "Logs, Metrics, Traces",
+            "cards": [
+                {
+                    "title": "Logs",
+                    "content": [
+                        { "type": "text", "value": "Logs record events such as restarts, API calls, errors, or user actions." },
+                        { "type": "nested", "title": "Log Components", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Timestamp</strong> - When the event occurred",
+                                "<strong>Severity level</strong> - DEBUG, INFO, WARNING, ERROR, CRITICAL",
+                                "<strong>Message text</strong> - Description of the event",
+                                "<strong>Metadata</strong> - User ID, status code, etc."
+                            ]}
+                        ]},
+                        { "type": "keypoint", "badge": "Important", "value": "Logs are essential for troubleshooting but must be complemented with metrics and traces." }
+                    ]
+                },
+                {
+                    "title": "Metrics",
+                    "content": [
+                        { "type": "highlight", "value": "Metrics are time-series measurements collected at regular intervals" },
+                        { "type": "text", "value": "Metrics allow trend analysis, forecasting, and autoscaling decisions." },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "💻", "text": "CPU and memory utilization" },
+                            { "icon": "⏱️", "text": "Request latency" },
+                            { "icon": "📏", "text": "Queue length" },
+                            { "icon": "🔗", "text": "Number of active connections" }
+                        ]},
+                        { "type": "keypoint", "badge": "Frequency", "value": "Metrics should be collected frequently (every 30 seconds to a few minutes) for meaningful analysis." }
+                    ]
+                },
+                {
+                    "title": "Traces",
+                    "content": [
+                        { "type": "concept", "title": "Distributed Tracing", "value": "Tracks how requests flow through microservices to reveal bottlenecks and performance issues." },
+                        { "type": "nested", "title": "What Traces Reveal", "content": [
+                            { "type": "list", "items": [
+                                "Which services handle a request",
+                                "How long each step takes",
+                                "Where bottlenecks occur",
+                                "Request dependencies between services"
+                            ]}
+                        ]},
+                        { "type": "tags", "items": ["Jaeger", "Zipkin"] }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Telemetry Signals",
+                "type": "dragdrop",
+                "instructions": "Categorize each characteristic to the correct telemetry signal:",
+                "zones": [
+                    { "id": "logs", "title": "Logs" },
+                    { "id": "metrics", "title": "Metrics" },
+                    { "id": "traces", "title": "Traces" }
+                ],
+                "items": [
+                    { "text": "Text-based event records", "zone": "logs" },
+                    { "text": "Includes severity levels (DEBUG, INFO, ERROR)", "zone": "logs" },
+                    { "text": "Time-series measurements", "zone": "metrics" },
+                    { "text": "Best for trend analysis", "zone": "metrics" },
+                    { "text": "End-to-end request tracking", "zone": "traces" },
+                    { "text": "Visualized with Jaeger or Zipkin", "zone": "traces" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: OpenTelemetry",
+            "navTitle": "OpenTelemetry (OTel)",
+            "cards": [
+                {
+                    "title": "What is OpenTelemetry?",
+                    "content": [
+                        { "type": "highlight", "value": "OpenTelemetry = vendor-neutral APIs, SDKs, and tools for generating and exporting logs, metrics, and traces" },
+                        { "type": "list", "items": [
+                            "Supports many programming languages",
+                            "Integrates with popular observability backends",
+                            "CNCF project (merged OpenTracing and OpenCensus)",
+                            "Industry standard for telemetry collection"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Key Benefits",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔓", "title": "Vendor-Neutral", "text": "Not tied to any specific backend" },
+                            { "icon": "🌐", "title": "Multi-Language", "text": "Supports Go, Python, Java, JS, and more" },
+                            { "icon": "🔌", "title": "Integrations", "text": "Works with Prometheus, Jaeger, Grafana, etc." },
+                            { "icon": "📦", "title": "All-in-One", "text": "Unified for logs, metrics, and traces" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "OTel Components",
+                    "content": [
+                        { "type": "nested", "title": "Core Components", "content": [
+                            { "type": "list", "items": [
+                                "<strong>APIs</strong> - Language-specific interfaces for instrumentation",
+                                "<strong>SDKs</strong> - Implementation of APIs with built-in processing",
+                                "<strong>Collectors</strong> - Receive, process, and export telemetry data",
+                                "<strong>Exporters</strong> - Send data to various backends"
+                            ]}
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "OpenTelemetry Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What does OpenTelemetry provide?",
+                        "options": ["Only logs collection", "Only metrics collection", "Vendor-neutral APIs, SDKs, and tools for all telemetry", "Only trace collection"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "OpenTelemetry is:",
+                        "options": ["Proprietary to AWS", "Proprietary to Google", "A CNCF project", "Only for Kubernetes"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What happened when OpenTracing and OpenCensus merged?",
+                        "options": ["They were discontinued", "They became OpenTelemetry", "They became Prometheus", "They became Jaeger"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Prometheus for Monitoring",
+            "navTitle": "Prometheus",
+            "cards": [
+                {
+                    "title": "What is Prometheus?",
+                    "content": [
+                        { "type": "highlight", "value": "Prometheus = CNCF Graduated project and industry standard for Cloud Native monitoring" },
+                        { "type": "concept", "title": "Time Series Database (TSDB)", "value": "Prometheus stores metrics in a TSDB optimized for timestamped data. Metrics can be queried using PromQL." }
+                    ]
+                },
+                {
+                    "title": "Pull vs Push Models",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Pull Model (Dominant)", "rightTitle": "Push Model",
+                            "left": ["Prometheus scrapes /metrics endpoints", "Via HTTP at regular intervals", "Standard for long-running services"],
+                            "right": ["Used for short-lived jobs", "Via Pushgateway", "Less common"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Labels and Exporters",
+                    "content": [
+                        { "type": "concept", "title": "Labels", "value": "Metrics include labels that provide context (namespace, pod name, method, status code). Labels enable powerful filtering and aggregation." },
+                        { "type": "text", "value": "<strong>Exporters expose metrics for applications that do not natively support Prometheus:</strong>" },
+                        { "type": "tags", "items": ["Node Exporter", "PostgreSQL Exporter", "Redis Exporter", "NGINX Exporter"] },
+                        { "type": "keypoint", "badge": "Deployment", "value": "Exporters often run as sidecar containers in Kubernetes." }
+                    ]
+                },
+                {
+                    "title": "Alertmanager",
+                    "content": [
+                        { "type": "text", "value": "Alertmanager handles alert notifications via email, SMS, chat, or other channels." },
+                        { "type": "list", "items": [
+                            "Alerts trigger when metrics cross defined thresholds",
+                            "Prometheus can predict future threshold crossings using time-series analysis",
+                            "Supports alert grouping, inhibition, and silencing"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Prometheus Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is Prometheus' dominant collection model?",
+                        "options": ["Push", "Pull", "Both equally", "Neither"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What enables Prometheus to collect metrics from non-native applications?",
+                        "options": ["Labels", "Exporters", "Pushgateway", "Alertmanager"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which signals does Prometheus collect?",
+                        "options": ["Logs", "Metrics", "Traces", "All of the above"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which component allows applications to push metrics?",
+                        "options": ["Exporter", "Pushgateway", "Alertmanager", "TSDB"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: FinOps and Cost Management",
+            "navTitle": "FinOps & Cost",
+            "cards": [
+                {
+                    "title": "What is FinOps?",
+                    "content": [
+                        { "type": "concept", "title": "FinOps", "value": "Cloud financial management discipline focused on maximizing business value through collaboration between engineering, finance, and operations." },
+                        { "type": "keypoint", "badge": "Goal", "value": "Balance performance, reliability, and cost in cloud operations." }
+                    ]
+                },
+                {
+                    "title": "Cloud Pricing Models",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "💳", "title": "On-Demand", "text": "Pay only while resources run; most flexible" },
+                            { "icon": "📋", "title": "Reserved", "text": "Commit for 1-3 years; large discounts but reduced flexibility" },
+                            { "icon": "💰", "title": "Spot", "text": "Deeply discounted spare capacity; can be terminated at any time" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Rightsizing",
+                    "content": [
+                        { "type": "highlight", "value": "Rightsizing ensures instance sizes match workload needs" },
+                        { "type": "nested", "title": "Rightsizing Strategies", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Autoscaling</strong> - Adjust capacity dynamically based on demand",
+                                "<strong>CPU/RAM configuration</strong> - Choose appropriate sizes for workloads",
+                                "<strong>Instance type selection</strong> - Use types optimized for specific workloads"
+                            ]}
+                        ]},
+                        { "type": "keypoint", "badge": "Benefit", "value": "Effective rightsizing reduces waste and improves cost efficiency." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "FinOps Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Which pricing model offers the most flexibility but highest cost?",
+                        "options": ["On-Demand", "Reserved", "Spot", "None of the above"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Which pricing model can be terminated at any time?",
+                        "options": ["On-Demand", "Reserved", "Spot", "None of the above"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Rightsizing includes:",
+                        "options": ["Buying more resources than needed", "Matching instance sizes to workload needs", "Using only the largest instances", "Ignoring cost"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What helps balance performance and cost?",
+                        "options": ["Using only on-demand instances", "Rightsizing and autoscaling", "Using only reserved instances", "Ignoring metrics"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "📝", "title": "Logs", "text": "Text-based event records with timestamps and severity" },
+        { "icon": "📊", "title": "Metrics", "text": "Time-series measurements for trend analysis" },
+        { "icon": "🔍", "title": "Traces", "text": "End-to-end request tracking across services" },
+        { "icon": "🔓", "title": "OpenTelemetry", "text": "Vendor-neutral telemetry collection" },
+        { "icon": "📈", "title": "Prometheus", "text": "Industry-standard monitoring with TSDB" },
+        { "icon": "💰", "title": "FinOps", "text": "Cost-aware cloud operations" }
+    ]
+}

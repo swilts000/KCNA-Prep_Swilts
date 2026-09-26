@@ -1,0 +1,496 @@
+{
+    "title": "Chapter 8: Following Kubernetes Best Practices",
+    "subtitle": "Networking, RBAC, Helm, and operational best practices",
+    "themeColor": "#f59e0b",
+    "themeColorDark": "#d97706",
+    "lessons": [
+        {
+            "title": "Lesson 1: Kubernetes Networking Essentials",
+            "navTitle": "Networking Essentials",
+            "cards": [
+                {
+                    "title": "Three Traffic Patterns",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes has three main traffic patterns:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🔄", "title": "Container-to-Container", "text": "Inside same Pod via localhost" },
+                            { "icon": "↔️", "title": "Pod-to-Pod (East-West)", "text": "Overlay network across nodes" },
+                            { "icon": "↕️", "title": "External (North-South)", "text": "Cluster to outside world" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Traffic Patterns Comparison",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "East-West Traffic", "rightTitle": "North-South Traffic",
+                            "left": ["Pod-to-Pod communication", "Internal cluster traffic", "Uses overlay network", "Controlled by NetworkPolicy"],
+                            "right": ["External to/from cluster", "User-facing traffic", "Exposed via NodePort, LoadBalancer, Ingress", "Controlled by firewall/Ingress rules"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Service Discovery and IPs",
+                    "content": [
+                        { "type": "keypoint", "badge": "Important", "value": "Pod IPs are ephemeral — use Services and DNS names for stable addressing." },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🔒", "title": "ClusterIP", "text": "Internal-only access" },
+                            { "icon": "🚪", "title": "NodePort", "text": "Expose on node ports" },
+                            { "icon": "⚖️", "title": "LoadBalancer", "text": "Cloud load balancer" }
+                        ]},
+                        { "type": "text", "value": "IPAM plugins control how Pod IPs are allocated; by default a single IP pool is used." }
+                    ]
+                },
+                {
+                    "title": "NetworkPolicy Overview",
+                    "content": [
+                        { "type": "quote", "value": "NetworkPolicy is a resource allowing us to control network traffic flow in Kubernetes in an application-centric way." },
+                        { "type": "highlight", "value": "Think of NetworkPolicy as a pod-level firewall" },
+                        { "type": "text", "value": "NetworkPolicy lets you allow specific traffic to/from Pods selected by:" },
+                        { "type": "tags", "items": [
+                            { "text": "Labels", "primary": true },
+                            { "text": "Namespace selectors", "primary": true },
+                            { "text": "IP blocks", "primary": true }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "NetworkPolicy Key Points",
+                    "content": [
+                        { "type": "list", "items": [
+                            "⚠️ By default, Pods can talk to each other <strong>across namespaces</strong>",
+                            "🔌 NetworkPolicy is <strong>enforced by the CNI</strong> — not all CNIs support it",
+                            "🚫 Some CNIs (e.g., Kindnet in minikube) may not enforce policies"
+                        ]},
+                        { "type": "nested", "title": "Typical Use Cases", "content": [
+                            { "type": "list", "items": [
+                                "Deny all ingress by default, then add allow rules",
+                                "Restrict database access to only required app Pods",
+                                "Isolate namespaces from each other"
+                            ]}
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Networking Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is East-West traffic?",
+                        "options": ["External traffic", "Pod-to-Pod traffic", "Container-to-Container traffic", "User traffic"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Why should you use Services instead of Pod IPs?",
+                        "options": ["Pod IPs are faster", "Pod IPs are ephemeral", "Services are cheaper", "Pod IPs don't work"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What enforces NetworkPolicy rules?",
+                        "options": ["kube-scheduler", "kubelet", "CNI provider", "API server"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "By default, can Pods communicate across namespaces?",
+                        "options": ["No, never", "Yes, unless restricted by NetworkPolicy", "Only with Services", "Only with Ingress"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are valid NetworkPolicy selectors? (Select all that apply)",
+                        "options": [
+                            { "text": "Labels", "value": "labels" },
+                            { "text": "Namespace selectors", "value": "namespace" },
+                            { "text": "IP blocks", "value": "ipblocks" },
+                            { "text": "CPU usage", "value": "cpu" }
+                        ],
+                        "answer": ["labels", "namespace", "ipblocks"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: RBAC (Role-Based Access Control)",
+            "navTitle": "RBAC",
+            "cards": [
+                {
+                    "title": "What is RBAC?",
+                    "content": [
+                        { "type": "highlight", "value": "RBAC controls who can perform which actions on which resources" },
+                        { "type": "text", "value": "RBAC answers three questions:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "👤", "title": "Who?", "text": "Users, groups, service accounts" },
+                            { "icon": "⚡", "title": "What?", "text": "Verbs: get, list, create, delete..." },
+                            { "icon": "📦", "title": "Which?", "text": "Resources: pods, services, secrets..." }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "RBAC Core Objects",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📋", "title": "Role", "text": "Namespaced permissions (verbs on resources)" },
+                            { "icon": "🌐", "title": "ClusterRole", "text": "Cluster-wide permissions" },
+                            { "icon": "🔗", "title": "RoleBinding", "text": "Binds Role to subjects in a namespace" },
+                            { "icon": "🔗", "title": "ClusterRoleBinding", "text": "Binds ClusterRole cluster-wide" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Role vs ClusterRole",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Role + RoleBinding", "rightTitle": "ClusterRole + ClusterRoleBinding",
+                            "left": ["Namespaced scope", "Permissions within one namespace", "Use for app-specific access", "Example: dev team access to 'dev' namespace"],
+                            "right": ["Cluster-wide scope", "Permissions across all namespaces", "Use for cluster admins", "Example: view all pods in cluster"]
+                        }
+                    ]
+                },
+                {
+                    "title": "RBAC Example",
+                    "content": [
+                        { "type": "text", "value": "<strong>Role</strong> (pod-reader in 'kcna' namespace):" },
+                        { "type": "concept", "title": "Role Definition", "value": "rules:<br>- apiGroups: [\"\"]<br>&nbsp;&nbsp;resources: [\"pods\"]<br>&nbsp;&nbsp;verbs: [\"get\", \"watch\", \"list\"]" },
+                        { "type": "text", "value": "<strong>RoleBinding</strong> (bind user 'jack' to pod-reader):" },
+                        { "type": "concept", "title": "RoleBinding", "value": "subjects:<br>- kind: User<br>&nbsp;&nbsp;name: jack<br>roleRef:<br>&nbsp;&nbsp;kind: Role<br>&nbsp;&nbsp;name: pod-reader" }
+                    ]
+                },
+                {
+                    "title": "Testing Permissions",
+                    "content": [
+                        { "type": "highlight", "value": "kubectl auth can-i <verb> <resource> -n <ns> --as=<user>" },
+                        { "type": "example", "title": "Example", "value": "kubectl auth can-i get pods -n kcna --as=jack<br>Returns 'yes' or 'no'" },
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Apply the least privilege principle: grant only the minimum permissions required." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "RBAC Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What does RBAC stand for?",
+                        "options": ["Resource-Based Access Control", "Role-Based Access Control", "Rule-Based Access Control", "Request-Based Access Control"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What's the difference between Role and ClusterRole?",
+                        "options": ["Role is faster", "Role is namespaced, ClusterRole is cluster-wide", "ClusterRole is deprecated", "No difference"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command tests if a user can perform an action?",
+                        "options": ["kubectl test", "kubectl auth can-i", "kubectl check", "kubectl verify"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is the RBAC best practice principle?",
+                        "options": ["Grant all permissions", "Least privilege", "Maximum access", "No restrictions"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are RBAC subjects? (Select all that apply)",
+                        "options": [
+                            { "text": "Users", "value": "users" },
+                            { "text": "Groups", "value": "groups" },
+                            { "text": "Service Accounts", "value": "sa" },
+                            { "text": "Pods", "value": "pods" }
+                        ],
+                        "answer": ["users", "groups", "sa"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Helm — Package Manager",
+            "navTitle": "Helm",
+            "cards": [
+                {
+                    "title": "Why Helm?",
+                    "content": [
+                        { "type": "highlight", "value": "Helm templates and packages Kubernetes manifests as charts" },
+                        { "type": "text", "value": "Helm enables:" },
+                        { "type": "list", "items": [
+                            "📦 Reusable, parameterized deployments",
+                            "🔄 Easy upgrades and rollbacks",
+                            "📝 Reduced YAML duplication across environments",
+                            "🏪 Sharing via chart repositories"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Helm Concepts",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "📦", "title": "Chart", "text": "Package of resource templates" },
+                            { "icon": "🚀", "title": "Release", "text": "Deployed instance of a chart" },
+                            { "icon": "🏪", "title": "Repository", "text": "Storage for charts" }
+                        ]},
+                        { "type": "keypoint", "badge": "Analogy", "value": "Chart = apt/yum package, Release = installed instance, Repository = package registry" }
+                    ]
+                },
+                {
+                    "title": "Helm vs Raw Manifests",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Raw YAML Manifests", "rightTitle": "Helm Charts",
+                            "left": ["Copy-paste for each environment", "Manual version tracking", "Hard to rollback", "No templating"],
+                            "right": ["Parameterized values per environment", "Built-in versioning", "Easy rollback to any revision", "Full templating support"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Basic Helm Commands",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "helm install <release> <chart>", "text": "Deploy a chart" },
+                            { "title": "helm upgrade <release> <chart>", "text": "Upgrade a release" },
+                            { "title": "helm rollback <release> <rev>", "text": "Rollback to revision" },
+                            { "title": "helm list", "text": "List releases" },
+                            { "title": "helm uninstall <release>", "text": "Remove a release" },
+                            { "title": "helm repo add <name> <url>", "text": "Add chart repository" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Alternatives to Helm",
+                    "content": [
+                        { "type": "text", "value": "Other tools for managing Kubernetes manifests:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔧", "title": "Kustomize", "text": "Overlay-based customization, built into kubectl" },
+                            { "icon": "📝", "title": "Jsonnet", "text": "Data templating language" },
+                            { "icon": "🐍", "title": "Pulumi", "text": "Infrastructure as code with real languages" },
+                            { "icon": "🔷", "title": "CDK8s", "text": "Define K8s resources in code" }
+                        ]},
+                        { "type": "keypoint", "badge": "Tip", "value": "Choose the tool that fits your team's workflow. Helm is the most widely adopted." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Helm Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is a Helm chart?",
+                        "options": ["A running container", "A package of resource templates", "A Kubernetes node", "A monitoring dashboard"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is a Helm release?",
+                        "options": ["A chart version", "A deployed instance of a chart", "A repository", "A template"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command rolls back a release?",
+                        "options": ["helm undo", "helm rollback", "helm revert", "helm restore"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is Kustomize?",
+                        "options": ["A Helm plugin", "Overlay-based manifest customization", "A container runtime", "A CNI plugin"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does Helm help with? (Select all that apply)",
+                        "options": [
+                            { "text": "Reusable deployments", "value": "reusable" },
+                            { "text": "Easy rollbacks", "value": "rollbacks" },
+                            { "text": "Container runtime", "value": "runtime" },
+                            { "text": "Reduced YAML duplication", "value": "yaml" }
+                        ],
+                        "answer": ["reusable", "rollbacks", "yaml"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: The 4Cs of Cloud Native Security",
+            "navTitle": "4Cs Security",
+            "cards": [
+                {
+                    "title": "Layered Security Model",
+                    "content": [
+                        { "type": "highlight", "value": "Security must be applied at every layer — weaknesses in lower layers undermine higher layers" },
+                        { "type": "grid", "columns": 4, "items": [
+                            { "icon": "☁️", "title": "Cloud", "text": "Infrastructure security" },
+                            { "icon": "🏗️", "title": "Cluster", "text": "Kubernetes security" },
+                            { "icon": "📦", "title": "Container", "text": "Image & runtime security" },
+                            { "icon": "💻", "title": "Code", "text": "Application security" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "4Cs Security Details",
+                    "content": [
+                        { "type": "nested", "title": "Cloud Layer", "content": [
+                            { "type": "list", "items": ["Network security groups", "IAM policies", "Encryption at rest", "Cloud provider hardening"] }
+                        ]},
+                        { "type": "nested", "title": "Cluster Layer", "content": [
+                            { "type": "list", "items": ["RBAC", "NetworkPolicy", "etcd encryption", "API server access control"] }
+                        ]},
+                        { "type": "nested", "title": "Container Layer", "content": [
+                            { "type": "list", "items": ["Minimal base images", "Non-root users", "Image scanning", "Signed images"] }
+                        ]},
+                        { "type": "nested", "title": "Code Layer", "content": [
+                            { "type": "list", "items": ["Secure coding practices", "Dependency scanning", "Secrets management", "Input validation"] }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Defense in Depth",
+                    "content": [
+                        { "type": "text", "value": "Each layer adds protection. If one layer fails, others still provide security:" },
+                        { "type": "example", "title": "Example", "value": "Even if an attacker compromises your code, container isolation, NetworkPolicy, and RBAC can limit the blast radius." },
+                        { "type": "keypoint", "badge": "Principle", "value": "Never rely on a single security control. Layer defenses at Cloud, Cluster, Container, and Code." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "4Cs Security Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What are the 4Cs of cloud native security?",
+                        "options": ["Cloud, Cluster, Container, Code", "CPU, Cache, Core, Compute", "Config, Control, Connect, Compile", "Client, Controller, Cluster, Cloud"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Which layer includes RBAC and NetworkPolicy?",
+                        "options": ["Cloud", "Cluster", "Container", "Code"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which layer includes image scanning?",
+                        "options": ["Cloud", "Cluster", "Container", "Code"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What is defense in depth?",
+                        "options": ["Single strong firewall", "Layered security controls", "Deep packet inspection", "Maximum permissions"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are Cluster layer security controls? (Select all that apply)",
+                        "options": [
+                            { "text": "RBAC", "value": "rbac" },
+                            { "text": "NetworkPolicy", "value": "netpol" },
+                            { "text": "Image scanning", "value": "scanning" },
+                            { "text": "etcd encryption", "value": "etcd" }
+                        ],
+                        "answer": ["rbac", "netpol", "etcd"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Operational Best Practices",
+            "navTitle": "Best Practices",
+            "cards": [
+                {
+                    "title": "Best Practices Overview",
+                    "content": [
+                        { "type": "text", "value": "Key operational recommendations for production Kubernetes:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🎮", "title": "Controllers", "text": "Use Deployments, not raw Pods" },
+                            { "icon": "📁", "title": "Namespaces", "text": "Organize and isolate workloads" },
+                            { "icon": "📊", "title": "Resources", "text": "Set requests and limits" },
+                            { "icon": "💚", "title": "Probes", "text": "Liveness and readiness" },
+                            { "icon": "📦", "title": "Small Images", "text": "Minimal base images" },
+                            { "icon": "🏷️", "title": "Labels", "text": "Consistent metadata" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Workload Best Practices",
+                    "content": [
+                        { "type": "list", "items": [
+                            "✅ Use <strong>controllers</strong> (Deployments, StatefulSets, DaemonSets) — not raw Pods",
+                            "✅ Organize with <strong>namespaces</strong> and apply RBAC/NetworkPolicy per namespace",
+                            "✅ Set <strong>resource requests and limits</strong> for scheduling and stability",
+                            "✅ Configure <strong>readiness and liveness probes</strong> for health checks",
+                            "✅ Use <strong>small, minimal images</strong> to reduce attack surface"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Infrastructure Best Practices",
+                    "content": [
+                        { "type": "list", "items": [
+                            "🌍 Run <strong>multiple worker nodes</strong> across failure domains",
+                            "📊 Use <strong>topology spread constraints</strong> and anti-affinity",
+                            "🔒 <strong>Deny network traffic by default</strong>, allow only required",
+                            "🔐 Consider <strong>service mesh for mTLS</strong> (encrypted pod-to-pod)",
+                            "👤 <strong>Avoid running as root</strong>; use non-root users in images"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Image and Registry Best Practices",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Do ✅", "rightTitle": "Don't ❌",
+                            "left": ["Build and host your own images", "Use private registries", "Scan images in CI", "Use specific version tags"],
+                            "right": ["Pull random public images", "Use 'latest' tag in production", "Skip vulnerability scanning", "Run as root"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Cluster Hardening",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔐", "title": "Encrypt etcd", "text": "Protect secrets at rest" },
+                            { "icon": "🚪", "title": "Restrict API access", "text": "Limit who can reach API server" },
+                            { "icon": "🔄", "title": "Keep K8s updated", "text": "Apply security patches" },
+                            { "icon": "📋", "title": "Audit logging", "text": "Track API server activity" }
+                        ]},
+                        { "type": "keypoint", "badge": "Remember", "value": "Use consistent labels: name, instance, version, component for selection and observability." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Best Practices Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Should you use raw Pods in production?",
+                        "options": ["Yes, always", "No, use controllers like Deployments", "Only for databases", "Only for stateless apps"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What's the recommended default NetworkPolicy approach?",
+                        "options": ["Allow all traffic", "Deny by default, allow required", "No NetworkPolicy needed", "Block all traffic"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Why use small container images?",
+                        "options": ["Faster downloads only", "Reduce attack surface and size", "Required by Kubernetes", "Better colors"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Should containers run as root?",
+                        "options": ["Yes, for full access", "No, use non-root users", "Only in production", "Only in development"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are cluster hardening practices? (Select all that apply)",
+                        "options": [
+                            { "text": "Encrypt etcd", "value": "etcd" },
+                            { "text": "Restrict API server access", "value": "api" },
+                            { "text": "Keep Kubernetes updated", "value": "update" },
+                            { "text": "Disable all logging", "value": "nolog" }
+                        ],
+                        "answer": ["etcd", "api", "update"],
+                        "multi": true
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🌐", "title": "Networking", "text": "East-West, North-South, NetworkPolicy" },
+        { "icon": "🔐", "title": "RBAC", "text": "Role, ClusterRole, Bindings, least privilege" },
+        { "icon": "📦", "title": "Helm", "text": "Charts, releases, repos, easy rollbacks" },
+        { "icon": "🛡️", "title": "4Cs Security", "text": "Cloud, Cluster, Container, Code" },
+        { "icon": "✅", "title": "Best Practices", "text": "Controllers, namespaces, probes, small images" }
+    ]
+}

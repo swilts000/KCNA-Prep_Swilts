@@ -1,0 +1,505 @@
+{
+    "title": "Chapter 7: Application Placement and Debugging with Kubernetes",
+    "subtitle": "Control workload placement, manage resources, and debug applications",
+    "themeColor": "#10b981",
+    "themeColorDark": "#059669",
+    "lessons": [
+        {
+            "title": "Lesson 1: Scheduling in Kubernetes",
+            "navTitle": "Scheduling",
+            "cards": [
+                {
+                    "title": "What is Scheduling?",
+                    "content": [
+                        { "type": "quote", "value": "Scheduling is the process of assigning Pods to Kubernetes nodes for the kubelet to run them." },
+                        { "type": "text", "value": "The default scheduler operates in <strong>two phases</strong>:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔍", "title": "1. Filtering", "text": "Eliminate nodes that cannot run the Pod (insufficient resources, mismatched labels, taints)" },
+                            { "icon": "⭐", "title": "2. Scoring", "text": "Rank remaining nodes and pick the best candidate" }
+                        ]},
+                        { "type": "keypoint", "badge": "Important", "value": "If no node passes filtering, the Pod remains Pending until conditions change." }
+                    ]
+                },
+                {
+                    "title": "Placement Controls Overview",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes provides several mechanisms to control Pod placement:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🏷️", "title": "nodeSelector", "text": "Simple label-based selection" },
+                            { "icon": "📌", "title": "nodeName", "text": "Hard bind to specific node" },
+                            { "icon": "🎯", "title": "nodeAffinity", "text": "Expressive node rules" },
+                            { "icon": "🤝", "title": "podAffinity", "text": "Co-locate with other Pods" },
+                            { "icon": "🚫", "title": "podAntiAffinity", "text": "Avoid other Pods" },
+                            { "icon": "🌍", "title": "Topology Spread", "text": "Distribute across zones" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Placement Controls Comparison",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Simple Controls", "rightTitle": "Advanced Controls",
+                            "left": ["nodeSelector - key:value matching", "nodeName - exact node binding", "Easy to understand", "Limited flexibility"],
+                            "right": ["nodeAffinity - required/preferred rules", "podAffinity/AntiAffinity - relative placement", "Topology Spread - zone distribution", "Complex but powerful"]
+                        }
+                    ]
+                },
+                {
+                    "title": "nodeSelector",
+                    "content": [
+                        { "type": "text", "value": "The simplest placement control. Add labels to nodes and reference them in Pod specs." },
+                        { "type": "concept", "title": "Example", "value": "nodeSelector:<br>&nbsp;&nbsp;purpose: web-server" },
+                        { "type": "nested", "title": "Minikube Workflow", "content": [
+                            { "type": "list", "items": [
+                                "Add a node: <code>minikube node add</code>",
+                                "Label a node: <code>kubectl label node &lt;node&gt; purpose=web-server</code>",
+                                "Create Deployment with nodeSelector",
+                                "Observe scheduling with <code>kubectl describe</code>"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "nodeAffinity",
+                    "content": [
+                        { "type": "text", "value": "More expressive than nodeSelector with <strong>required</strong> and <strong>preferred</strong> rules:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔒", "title": "requiredDuringScheduling IgnoredDuringExecution", "text": "Hard constraint - must be satisfied" },
+                            { "icon": "💡", "title": "preferredDuringScheduling IgnoredDuringExecution", "text": "Soft constraint - best effort" }
+                        ]},
+                        { "type": "keypoint", "badge": "Note", "value": "IgnoredDuringExecution means running Pods won't be evicted if node labels change." }
+                    ]
+                },
+                {
+                    "title": "podAffinity & podAntiAffinity",
+                    "content": [
+                        { "type": "text", "value": "Schedule Pods <strong>relative to other Pods</strong>:" },
+                        { "type": "comparison", "leftTitle": "podAffinity", "rightTitle": "podAntiAffinity",
+                            "left": ["Co-locate Pods together", "Example: app + cache on same node", "Reduces network latency"],
+                            "right": ["Keep Pods apart", "Example: spread replicas across nodes", "Improves fault tolerance"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Topology Spread Constraints",
+                    "content": [
+                        { "type": "highlight", "value": "Control how Pods are distributed across failure domains (nodes, zones, regions)" },
+                        { "type": "text", "value": "Useful to avoid concentration of replicas in a single availability zone or node." },
+                        { "type": "example", "title": "Use Case", "value": "Spread 6 replicas evenly across 3 availability zones (2 per zone) for high availability." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Scheduling Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What are the two phases of the Kubernetes scheduler?",
+                        "options": ["Filtering and Scoring", "Selecting and Binding", "Matching and Placing", "Queuing and Running"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "What happens if no node passes the filtering phase?",
+                        "options": ["Pod is deleted", "Pod remains Pending", "Pod runs on any node", "Error is thrown"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which placement control is the simplest?",
+                        "options": ["nodeAffinity", "nodeSelector", "podAffinity", "Topology Spread"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which placement controls schedule Pods relative to other Pods? (Select all that apply)",
+                        "options": [
+                            { "text": "nodeSelector", "value": "nodeselector" },
+                            { "text": "podAffinity", "value": "podaffinity" },
+                            { "text": "podAntiAffinity", "value": "podantiaffinity" },
+                            { "text": "nodeName", "value": "nodename" }
+                        ],
+                        "answer": ["podaffinity", "podantiaffinity"],
+                        "multi": true
+                    },
+                    {
+                        "question": "What does 'IgnoredDuringExecution' mean?",
+                        "options": ["Rules are ignored completely", "Running Pods won't be evicted if labels change", "Scheduling is skipped", "Pods are terminated"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Resource Requests and Limits",
+            "navTitle": "Resource Management",
+            "cards": [
+                {
+                    "title": "Why Resources Matter",
+                    "content": [
+                        { "type": "text", "value": "Proper resource configuration helps the scheduler place Pods and protects nodes from exhaustion." },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📋", "title": "Requests", "text": "Reserve resources on the node (affects scheduling)" },
+                            { "icon": "🚧", "title": "Limits", "text": "Cap maximum usage (enforced by runtime)" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Requests vs Limits",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Requests", "rightTitle": "Limits",
+                            "left": ["Minimum guaranteed resources", "Used by scheduler for placement", "Pod won't be scheduled without available requests", "Affects QoS class"],
+                            "right": ["Maximum allowed resources", "Enforced at runtime", "Exceeding causes throttling (CPU) or OOMKilled (memory)", "Protects node stability"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Resource Units",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🧠", "title": "Memory", "text": "Bytes: 100Mi, 1Gi, 500M" },
+                            { "icon": "⚡", "title": "CPU", "text": "Cores or millicores: 500m = 0.5 CPU, 1 = 1 core" }
+                        ]},
+                        { "type": "example", "title": "Common Values", "value": "Memory: 128Mi, 256Mi, 512Mi, 1Gi<br>CPU: 100m, 250m, 500m, 1000m (1 core)" }
+                    ]
+                },
+                {
+                    "title": "Exceeding Limits",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "CPU Exceeded", "rightTitle": "Memory Exceeded",
+                            "left": ["Container is throttled", "Slows down but keeps running", "No termination"],
+                            "right": ["Container is OOMKilled", "Restarts (CrashLoopBackOff)", "Can destabilize node if no limit"]
+                        },
+                        { "type": "keypoint", "badge": "Remember", "value": "CPU overuse = throttling. Memory overuse = termination (OOMKilled)." }
+                    ]
+                },
+                {
+                    "title": "Example Pod Spec",
+                    "content": [
+                        { "type": "concept", "title": "Memory Stress Test", "value": "resources:<br>&nbsp;&nbsp;requests:<br>&nbsp;&nbsp;&nbsp;&nbsp;memory: \"100Mi\"<br>&nbsp;&nbsp;limits:<br>&nbsp;&nbsp;&nbsp;&nbsp;memory: \"200Mi\"" },
+                        { "type": "text", "value": "If the container tries to use more than 200Mi, it will be <strong>OOMKilled</strong>." }
+                    ]
+                },
+                {
+                    "title": "Best Practices",
+                    "content": [
+                        { "type": "list", "items": [
+                            "✅ Always define both requests and limits for production",
+                            "✅ Set requests based on typical usage",
+                            "✅ Set limits based on maximum acceptable usage",
+                            "✅ Monitor actual usage and tune over time",
+                            "✅ Use resource quotas at namespace level"
+                        ]},
+                        { "type": "keypoint", "badge": "Tip", "value": "If only a limit is set, Kubernetes may set the request equal to the limit (depending on defaults)." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Resource Management Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What do resource requests affect?",
+                        "options": ["Runtime enforcement", "Scheduling decisions", "Network policies", "Storage allocation"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What happens when a container exceeds its memory limit?",
+                        "options": ["It's throttled", "It's OOMKilled", "Nothing happens", "It's paused"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does 500m CPU mean?",
+                        "options": ["500 megabytes", "500 millicores (0.5 CPU)", "500 minutes", "500 memory units"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What happens when a container exceeds its CPU limit?",
+                        "options": ["It's OOMKilled", "It's throttled", "It's terminated", "It's migrated"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are best practices for resource management? (Select all that apply)",
+                        "options": [
+                            { "text": "Define both requests and limits", "value": "both" },
+                            { "text": "Monitor and tune over time", "value": "monitor" },
+                            { "text": "Only set limits, never requests", "value": "onlylimits" },
+                            { "text": "Use resource quotas at namespace level", "value": "quotas" }
+                        ],
+                        "answer": ["both", "monitor", "quotas"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Debugging with Logs and Events",
+            "navTitle": "Logs & Events",
+            "cards": [
+                {
+                    "title": "Debugging Tools Overview",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes provides several tools to investigate issues:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "📜", "title": "Logs", "text": "Container stdout/stderr" },
+                            { "icon": "📢", "title": "Events", "text": "Cluster activity records" },
+                            { "icon": "🔌", "title": "Port Forward", "text": "Local access to Pods" },
+                            { "icon": "💻", "title": "Exec", "text": "Run commands in containers" },
+                            { "icon": "📋", "title": "Describe", "text": "Detailed resource info" },
+                            { "icon": "📁", "title": "Copy", "text": "Transfer files to/from Pods" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "kubectl logs",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "kubectl logs <pod>", "text": "Fetch container stdout/stderr" },
+                            { "title": "kubectl logs --previous <pod>", "text": "Logs from previous instance (after restart)" },
+                            { "title": "kubectl logs <pod> -c <container>", "text": "Specific container in multi-container Pod" },
+                            { "title": "kubectl logs -f <pod>", "text": "Follow/stream logs in real-time" }
+                        ]},
+                        { "type": "keypoint", "badge": "Note", "value": "Kubernetes doesn't provide long-term log storage. Use centralized logging (ELK, Grafana Loki)." }
+                    ]
+                },
+                {
+                    "title": "kubectl get events",
+                    "content": [
+                        { "type": "highlight", "value": "Events show recent cluster activity: scheduling, image pulls, pod lifecycle" },
+                        { "type": "concept", "title": "Command", "value": "kubectl get events -n &lt;namespace&gt;" },
+                        { "type": "text", "value": "Events help understand:" },
+                        { "type": "list", "items": [
+                            "Why scheduling failed",
+                            "Why a Pod restarted",
+                            "Image pull errors",
+                            "Resource pressure issues"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Centralized Logging",
+                    "content": [
+                        { "type": "text", "value": "For production, deploy log collectors as a <strong>DaemonSet</strong> on every node:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📊", "title": "ELK Stack", "text": "Elasticsearch, Logstash, Kibana" },
+                            { "icon": "📈", "title": "Grafana Loki", "text": "Lightweight log aggregation" },
+                            { "icon": "🔥", "title": "Fluentd/Fluent Bit", "text": "CNCF log collectors" },
+                            { "icon": "☁️", "title": "Cloud Solutions", "text": "CloudWatch, Stackdriver, Azure Monitor" }
+                        ]},
+                        { "type": "keypoint", "badge": "Architecture", "value": "DaemonSet agents on each node collect logs and forward to central backend." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Logs & Events Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "How do you view logs from a previous container instance?",
+                        "options": ["kubectl logs --old", "kubectl logs --previous", "kubectl logs --history", "kubectl logs --last"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What Kubernetes resource type is used to run log collectors on every node?",
+                        "options": ["Deployment", "StatefulSet", "DaemonSet", "Job"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What do events help you understand?",
+                        "options": ["Container code errors", "Scheduling failures and Pod lifecycle", "Network latency", "Storage performance"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are centralized logging solutions? (Select all that apply)",
+                        "options": [
+                            { "text": "ELK Stack", "value": "elk" },
+                            { "text": "Grafana Loki", "value": "loki" },
+                            { "text": "kubectl logs", "value": "kubectl" },
+                            { "text": "Fluentd", "value": "fluentd" }
+                        ],
+                        "answer": ["elk", "loki", "fluentd"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Interactive Debugging",
+            "navTitle": "Interactive Debugging",
+            "cards": [
+                {
+                    "title": "kubectl exec",
+                    "content": [
+                        { "type": "highlight", "value": "Run commands inside a running container" },
+                        { "type": "concept", "title": "Command", "value": "kubectl exec -it &lt;pod&gt; -- /bin/sh" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "kubectl exec <pod> -- <cmd>", "text": "Run single command" },
+                            { "title": "kubectl exec -it <pod> -- bash", "text": "Interactive shell" },
+                            { "title": "kubectl exec <pod> -c <ctr> -- <cmd>", "text": "Specific container" }
+                        ]},
+                        { "type": "text", "value": "Use for: inspecting files, running diagnostics, checking processes." }
+                    ]
+                },
+                {
+                    "title": "kubectl port-forward",
+                    "content": [
+                        { "type": "text", "value": "Access a Pod's service locally without exposing it via a Service:" },
+                        { "type": "concept", "title": "Command", "value": "kubectl port-forward &lt;pod&gt; 8080:80" },
+                        { "type": "text", "value": "This forwards local port 8080 to Pod port 80." },
+                        { "type": "example", "title": "Use Cases", "value": "Debug web apps, test APIs, access databases, inspect dashboards" }
+                    ]
+                },
+                {
+                    "title": "kubectl cp",
+                    "content": [
+                        { "type": "text", "value": "Copy files to/from containers:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "Copy TO Pod", "text": "kubectl cp ./local-file <pod>:/path/in/container" },
+                            { "title": "Copy FROM Pod", "text": "kubectl cp <pod>:/path/in/container ./local-file" }
+                        ]},
+                        { "type": "keypoint", "badge": "Tip", "value": "Useful for extracting logs, configs, or injecting test files." }
+                    ]
+                },
+                {
+                    "title": "Debugging Commands Comparison",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Inspection Commands", "rightTitle": "Interactive Commands",
+                            "left": ["kubectl logs - view output", "kubectl describe - resource details", "kubectl get events - cluster activity"],
+                            "right": ["kubectl exec - run commands", "kubectl port-forward - network access", "kubectl cp - file transfer"]
+                        }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Interactive Debugging Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "Which command runs an interactive shell in a container?",
+                        "options": ["kubectl shell", "kubectl exec -it <pod> -- bash", "kubectl run bash", "kubectl connect"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does kubectl port-forward do?",
+                        "options": ["Exposes a Service externally", "Forwards local port to Pod port", "Creates a LoadBalancer", "Opens firewall rules"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "How do you copy a file from a Pod to your local machine?",
+                        "options": ["kubectl download", "kubectl cp <pod>:/path ./local", "kubectl get file", "kubectl export"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which commands are interactive? (Select all that apply)",
+                        "options": [
+                            { "text": "kubectl exec -it", "value": "exec" },
+                            { "text": "kubectl port-forward", "value": "portforward" },
+                            { "text": "kubectl logs", "value": "logs" },
+                            { "text": "kubectl cp", "value": "cp" }
+                        ],
+                        "answer": ["exec", "portforward"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Debugging Workflow",
+            "navTitle": "Debugging Workflow",
+            "cards": [
+                {
+                    "title": "Common Debugging Workflow",
+                    "content": [
+                        { "type": "text", "value": "A systematic approach to debugging Kubernetes applications:" },
+                        { "type": "list", "items": [
+                            "1️⃣ <strong>Check Pod status:</strong> kubectl get pods -n &lt;ns&gt;",
+                            "2️⃣ <strong>Describe the Pod:</strong> kubectl describe pod &lt;pod&gt; -n &lt;ns&gt;",
+                            "3️⃣ <strong>Inspect logs:</strong> kubectl logs &lt;pod&gt; -n &lt;ns&gt;",
+                            "4️⃣ <strong>Exec into container:</strong> kubectl exec -it &lt;pod&gt; -- /bin/sh",
+                            "5️⃣ <strong>Check node status:</strong> kubectl get nodes && kubectl describe node &lt;node&gt;",
+                            "6️⃣ <strong>Review Deployment/ReplicaSet:</strong> Check rollout history for recent changes"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Common Pod States",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "⏳", "title": "Pending", "text": "Waiting for scheduling or resources" },
+                            { "icon": "✅", "title": "Running", "text": "At least one container running" },
+                            { "icon": "✔️", "title": "Succeeded", "text": "All containers completed successfully" },
+                            { "icon": "❌", "title": "Failed", "text": "All containers terminated, at least one failed" },
+                            { "icon": "❓", "title": "Unknown", "text": "State cannot be determined" },
+                            { "icon": "🔄", "title": "CrashLoopBackOff", "text": "Container crashing repeatedly" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Common Issues and Causes",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "ImagePullBackOff", "text": "Wrong image name, missing credentials, registry issues" },
+                            { "title": "CrashLoopBackOff", "text": "App crashing, OOMKilled, missing config" },
+                            { "title": "Pending (long)", "text": "Insufficient resources, no matching nodes, PVC not bound" },
+                            { "title": "OOMKilled", "text": "Container exceeded memory limit" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Debugging Tips",
+                    "content": [
+                        { "type": "list", "items": [
+                            "🔍 Combine placement controls carefully — multiple rules are ANDed",
+                            "📊 Use topology spread constraints for availability across zones",
+                            "⚙️ Always set sensible resource requests and limits",
+                            "📈 Centralize logs and metrics for production",
+                            "🛠️ Use kubectl port-forward, exec, and cp for interactive debugging"
+                        ]},
+                        { "type": "keypoint", "badge": "Pro Tip", "value": "kubectl describe is your best friend — it shows events, conditions, and configuration in one view." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Debugging Workflow Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What's the first step in debugging a Pod issue?",
+                        "options": ["Delete and recreate", "Check Pod status with kubectl get pods", "Restart the node", "Scale to zero"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What does CrashLoopBackOff indicate?",
+                        "options": ["Pod is running fine", "Container is crashing repeatedly", "Image is being pulled", "Pod is being scheduled"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What typically causes ImagePullBackOff?",
+                        "options": ["Too much CPU usage", "Wrong image name or missing credentials", "Network policy blocking", "Insufficient memory"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command shows events, conditions, and configuration together?",
+                        "options": ["kubectl get", "kubectl logs", "kubectl describe", "kubectl events"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What causes a Pod to remain Pending? (Select all that apply)",
+                        "options": [
+                            { "text": "Insufficient cluster resources", "value": "resources" },
+                            { "text": "No matching nodes for nodeSelector", "value": "nodeselector" },
+                            { "text": "PVC not bound", "value": "pvc" },
+                            { "text": "Container running successfully", "value": "running" }
+                        ],
+                        "answer": ["resources", "nodeselector", "pvc"],
+                        "multi": true
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "📅", "title": "Scheduling", "text": "Filter → Score → Place Pods on nodes" },
+        { "icon": "🎯", "title": "Placement Controls", "text": "nodeSelector, affinity, topology spread" },
+        { "icon": "📊", "title": "Resources", "text": "Requests (scheduling) + Limits (runtime)" },
+        { "icon": "📜", "title": "Logs & Events", "text": "kubectl logs, events, DaemonSet collectors" },
+        { "icon": "🛠️", "title": "Interactive Debug", "text": "exec, port-forward, cp commands" },
+        { "icon": "🔍", "title": "Workflow", "text": "get → describe → logs → exec → fix" }
+    ]
+}

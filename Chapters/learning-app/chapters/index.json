@@ -1,0 +1,50 @@
+[
+    {
+        "file": "chapter1.json",
+        "title": "Chapter 1: From Cloud to Cloud Native and Kubernetes"
+    },
+    {
+        "file": "chapter2.json",
+        "title": "Chapter 2: Overview of CNCF and Kubernetes Certifications"
+    },
+    {
+        "file": "chapter3.json",
+        "title": "Chapter 3: Getting Started with Containers"
+    },
+    {
+        "file": "chapter4.json",
+        "title": "Chapter 4: Container Runtimes, Interfaces & Service Meshes"
+    },
+    {
+        "file": "chapter5.json",
+        "title": "Chapter 5: Orchestrating Containers with Kubernetes"
+    },
+    {
+        "file": "chapter6.json",
+        "title": "Chapter 6: Deploying and Scaling Applications with Kubernetes"
+    },
+    {
+        "file": "chapter7.json",
+        "title": "Chapter 7: Application Placement and Debugging with Kubernetes"
+    },
+    {
+        "file": "chapter8.json",
+        "title": "Chapter 8: Following Kubernetes Best Practices"
+    },
+    {
+        "file": "chapter9.json",
+        "title": "Chapter 9: Understanding Cloud Native Architectures"
+    },
+    {
+        "file": "chapter10.json",
+        "title": "Chapter 10: Implementing Telemetry and Observability in the Cloud"
+    },
+    {
+        "file": "chapter11.json",
+        "title": "Chapter 11: Automating Cloud Native Application Delivery"
+    },
+    {
+        "file": "chapter12.json",
+        "title": "Chapter 12: Practicing for the KCNA Exam with Mock Papers"
+    }
+]

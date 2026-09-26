@@ -1,0 +1,415 @@
+{
+    "title": "Chapter 5: Orchestrating Containers with Kubernetes",
+    "subtitle": "Cluster architecture, Pods, API model, and core features",
+    "themeColor": "#326ce5",
+    "themeColorDark": "#2857b8",
+    "lessons": [
+        {
+            "title": "Lesson 1: Kubernetes Architecture",
+            "navTitle": "K8s Architecture",
+            "cards": [
+                {
+                    "title": "Cluster Overview",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes manages containers across a cluster of machines called <strong>nodes</strong>. Nodes can be VMs, bare-metal servers, or a mix." },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🎛️", "title": "Control Plane Nodes", "text": "Run cluster management services and make global decisions" },
+                            { "icon": "⚙️", "title": "Worker Nodes", "text": "Run application workloads (pods) and report status to control plane" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Control Plane Components",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🌐", "title": "API Server", "text": "Central HTTP/gRPC gateway; all operations go through it" },
+                            { "icon": "💾", "title": "etcd", "text": "Distributed key-value store; single source of truth" },
+                            { "icon": "📅", "title": "Scheduler", "text": "Assigns pods to nodes based on resources & constraints" },
+                            { "icon": "🔄", "title": "Controller Manager", "text": "Runs controllers that reconcile desired vs current state" },
+                            { "icon": "☁️", "title": "Cloud Controller", "text": "(Optional) Integrates cloud provider features" }
+                        ]},
+                        { "type": "keypoint", "badge": "Key Component", "value": "kube-apiserver is the central hub — every kubectl command, every controller, and every node talks to it." }
+                    ]
+                },
+                {
+                    "title": "Worker Node Components",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🤖", "title": "kubelet", "text": "Node agent ensuring pods are running and healthy" },
+                            { "icon": "🔀", "title": "kube-proxy", "text": "Implements Service networking rules (iptables/ipvs)" },
+                            { "icon": "📦", "title": "Container Runtime", "text": "Actually runs containers (containerd, CRI-O)" }
+                        ]},
+                        { "type": "text", "value": "In small setups, a single node can host both control plane and worker components." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "K8s Components Quiz",
+                "type": "dragdrop",
+                "instructions": "Categorize each component:",
+                "zones": [
+                    { "id": "control", "title": "Control Plane" },
+                    { "id": "worker", "title": "Worker Node" }
+                ],
+                "items": [
+                    { "text": "kube-apiserver", "zone": "control" },
+                    { "text": "etcd", "zone": "control" },
+                    { "text": "kube-scheduler", "zone": "control" },
+                    { "text": "kubelet", "zone": "worker" },
+                    { "text": "kube-proxy", "zone": "worker" },
+                    { "text": "Container runtime", "zone": "worker" },
+                    { "text": "Controller manager", "zone": "control" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Pods and Container Grouping",
+            "navTitle": "Pods",
+            "cards": [
+                {
+                    "title": "What is a Pod?",
+                    "content": [
+                        { "type": "highlight", "value": "Pod is the smallest deployable unit in Kubernetes" },
+                        { "type": "text", "value": "A pod encapsulates one or more containers that:" },
+                        { "type": "list", "items": [
+                            "Share a <strong>network namespace</strong> and a single pod IP",
+                            "Containers communicate via <strong>localhost</strong>",
+                            "Share <strong>storage volumes</strong> mounted into the pod",
+                            "Can share IPC and other kernel resources"
+                        ]},
+                        { "type": "keypoint", "badge": "Remember", "value": "Pods are always co-scheduled and co-located on the same node." }
+                    ]
+                },
+                {
+                    "title": "Pod Patterns",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "📦", "title": "Single-Container", "text": "Most common for simple services" },
+                            { "icon": "🔧", "title": "Sidecar", "text": "Helper containers (logging, proxy, metrics)" },
+                            { "icon": "🚀", "title": "Init Containers", "text": "Run setup tasks before main containers" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Init Containers",
+                    "content": [
+                        { "type": "concept", "title": "What are Init Containers?", "value": "Special containers that run sequentially before app containers to perform setup tasks. They must complete successfully before the pod's main containers start." },
+                        { "type": "example", "title": "Use Cases", "value": "Wait for a database to be ready, download config files, run migrations, set up permissions." }
+                    ]
+                },
+                {
+                    "title": "Sidecar Pattern",
+                    "content": [
+                        { "type": "concept", "title": "What are Sidecars?", "value": "Helper containers that run alongside the main application container within the same pod, extending functionality without modifying the app." },
+                        { "type": "tags", "items": [
+                            { "text": "Logging agents", "primary": true },
+                            { "text": "Service mesh proxies", "primary": true },
+                            { "text": "Metrics collectors", "primary": true },
+                            { "text": "Security proxies", "primary": true }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Pods Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is the smallest deployable unit in Kubernetes?",
+                        "options": ["Container", "Pod", "Deployment", "Node"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "How do containers in the same pod communicate?",
+                        "options": ["Via Service", "Via localhost", "Via external IP", "Via DNS"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What must init containers do before main containers start?",
+                        "options": ["Run continuously", "Complete successfully", "Fail gracefully", "Scale horizontally"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which is a common sidecar use case? (Select all that apply)",
+                        "options": [
+                            { "text": "Logging agent", "value": "logging" },
+                            { "text": "Service mesh proxy", "value": "proxy" },
+                            { "text": "Database server", "value": "db" },
+                            { "text": "Metrics collector", "value": "metrics" }
+                        ],
+                        "answer": ["logging", "proxy", "metrics"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Kubernetes API & Declarative Model",
+            "navTitle": "API & Declarative Model",
+            "cards": [
+                {
+                    "title": "Declarative vs Imperative",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Declarative ✅", "rightTitle": "Imperative",
+                            "left": ["Declare desired state", "Controllers reconcile automatically", "Idempotent (apply multiple times)", "GitOps friendly"],
+                            "right": ["Issue commands step-by-step", "Manual intervention needed", "Order matters", "Harder to version control"]
+                        },
+                        { "type": "keypoint", "badge": "Kubernetes Way", "value": "You declare the desired state and controllers continuously reconcile the actual state to match." }
+                    ]
+                },
+                {
+                    "title": "Ways to Interact with the API",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "⌨️", "title": "kubectl", "text": "Primary CLI for operators" },
+                            { "icon": "🖥️", "title": "Dashboard / UIs", "text": "Lens, Octant, K8s Dashboard" },
+                            { "icon": "📚", "title": "Client Libraries", "text": "Go, Python, Java, JavaScript" },
+                            { "icon": "🌐", "title": "Direct HTTP", "text": "Possible but uncommon" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Key API Concepts",
+                    "content": [
+                        { "type": "list", "items": [
+                            "<strong>Manifests (YAML/JSON)</strong> — describe objects and are applied to the API server",
+                            "<strong>Reconciliation loops</strong> — controllers run infinite loops to detect drift and restore desired state",
+                            "<strong>API evolution</strong> — features move from alpha → beta → stable (GA)",
+                            "<strong>Feature gates</strong> — control alpha/beta feature availability",
+                            "<strong>CRDs</strong> — extend the API with Custom Resource Definitions"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "API Versioning",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🧪", "title": "Alpha (v1alpha1)", "text": "Experimental, may change, often disabled" },
+                            { "icon": "🔬", "title": "Beta (v1beta1)", "text": "Well-tested, enabled by default, may change" },
+                            { "icon": "✅", "title": "Stable (v1)", "text": "Production-ready, backward compatible" }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "API & Declarative Model Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is the primary CLI tool for Kubernetes?",
+                        "options": ["docker", "kubectl", "minikube", "helm"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What format are Kubernetes manifests typically written in?",
+                        "options": ["XML", "YAML", "CSV", "INI"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What do controllers do in Kubernetes?",
+                        "options": ["Run containers", "Reconcile desired vs actual state", "Store cluster data", "Route network traffic"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which API version is production-ready?",
+                        "options": ["v1alpha1", "v1beta1", "v1 (stable)", "v0"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What extends the Kubernetes API with custom resources?",
+                        "options": ["ConfigMaps", "Secrets", "CRDs", "Services"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Core Kubernetes Features",
+            "navTitle": "Core Features",
+            "cards": [
+                {
+                    "title": "Orchestration Capabilities",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes provides a rich set of orchestration capabilities:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔄", "title": "Automated Rollouts", "text": "Controlled updates with health checks and rollback" },
+                            { "icon": "🔍", "title": "Service Discovery", "text": "Stable DNS names and load distribution" },
+                            { "icon": "⚙️", "title": "Config Management", "text": "Inject config and secrets without rebuilding images" },
+                            { "icon": "💚", "title": "Self-Healing", "text": "Restart failed containers, reschedule pods" },
+                            { "icon": "📈", "title": "Horizontal Scaling", "text": "Scale pods manually or with HPA" },
+                            { "icon": "📋", "title": "Batch Processing", "text": "Jobs and CronJobs for scheduled tasks" },
+                            { "icon": "📦", "title": "Bin Packing", "text": "Efficient placement based on resources" },
+                            { "icon": "💾", "title": "Storage Orchestration", "text": "Dynamic provisioning via CSI" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Self-Healing in Detail",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes automatically maintains application health:" },
+                        { "type": "list", "items": [
+                            "🔄 <strong>Restart</strong> failed containers",
+                            "📍 <strong>Reschedule</strong> pods when nodes fail",
+                            "❤️ Respect <strong>readiness probes</strong> (traffic routing)",
+                            "💓 Respect <strong>liveness probes</strong> (container restart)"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Scaling Options",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "👆", "title": "Manual Scaling", "text": "kubectl scale deployment --replicas=5" },
+                            { "icon": "🤖", "title": "HPA", "text": "Horizontal Pod Autoscaler based on CPU/memory/custom metrics" },
+                            { "icon": "📊", "title": "VPA", "text": "Vertical Pod Autoscaler adjusts resource requests" },
+                            { "icon": "🖥️", "title": "Cluster Autoscaler", "text": "Adds/removes nodes based on demand" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Extensibility",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes supports additional workloads and frameworks:" },
+                        { "type": "tags", "items": [
+                            { "text": "KubeVirt (VMs)", "primary": true },
+                            { "text": "Knative (Serverless)", "primary": true },
+                            { "text": "Argo (Workflows)", "primary": true },
+                            { "text": "Operators", "primary": true }
+                        ]},
+                        { "type": "keypoint", "badge": "Primary Role", "value": "Kubernetes' primary role remains container orchestration." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Core Features Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What automatically scales pods based on metrics?",
+                        "options": ["VPA", "HPA", "Cluster Autoscaler", "ReplicaSet"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which probe determines if a container should receive traffic?",
+                        "options": ["Liveness probe", "Readiness probe", "Startup probe", "Health probe"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What happens when a node fails?",
+                        "options": ["Pods are lost forever", "Pods are rescheduled to healthy nodes", "Cluster shuts down", "Manual intervention required"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which Kubernetes feature handles scheduled tasks?",
+                        "options": ["Deployments", "Services", "CronJobs", "ConfigMaps"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Which are Kubernetes self-healing capabilities? (Select all that apply)",
+                        "options": [
+                            { "text": "Restart failed containers", "value": "restart" },
+                            { "text": "Reschedule pods on node failure", "value": "reschedule" },
+                            { "text": "Automatic code fixes", "value": "codefix" },
+                            { "text": "Respect liveness probes", "value": "liveness" }
+                        ],
+                        "answer": ["restart", "reschedule", "liveness"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Getting Started with Minikube",
+            "navTitle": "Minikube",
+            "cards": [
+                {
+                    "title": "What is Minikube?",
+                    "content": [
+                        { "type": "highlight", "value": "Minikube boots a single-node Kubernetes cluster for local learning and experimentation" },
+                        { "type": "keypoint", "badge": "Note", "value": "Minikube is intended for development and learning, NOT production." }
+                    ]
+                },
+                {
+                    "title": "Prerequisites",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "💻", "title": "OS", "text": "Linux, macOS, or Windows" },
+                            { "icon": "🔧", "title": "CPU", "text": "2+ cores" },
+                            { "icon": "🧠", "title": "RAM", "text": "2+ GB" },
+                            { "icon": "💾", "title": "Disk", "text": "~20 GB" },
+                            { "icon": "🐳", "title": "Driver", "text": "Docker or supported VM driver" },
+                            { "icon": "🌐", "title": "Network", "text": "Internet access" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Essential Commands",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "minikube start", "text": "Start a local cluster" },
+                            { "title": "minikube stop", "text": "Stop the cluster" },
+                            { "title": "minikube delete", "text": "Delete the cluster" },
+                            { "title": "minikube dashboard", "text": "Open the K8s dashboard" },
+                            { "title": "minikube kubectl -- <args>", "text": "Run kubectl commands" },
+                            { "title": "minikube status", "text": "Check cluster status" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Common kubectl Commands",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "kubectl get nodes", "text": "List cluster nodes" },
+                            { "title": "kubectl get pods", "text": "List pods in current namespace" },
+                            { "title": "kubectl get pods -A", "text": "List pods in all namespaces" },
+                            { "title": "kubectl create namespace", "text": "Create a namespace" },
+                            { "title": "kubectl apply -f file.yaml", "text": "Apply a manifest" },
+                            { "title": "kubectl describe pod <name>", "text": "Show pod details" },
+                            { "title": "kubectl logs <pod>", "text": "View pod logs" },
+                            { "title": "kubectl delete -f file.yaml", "text": "Delete resources" }
+                        ]},
+                        { "type": "keypoint", "badge": "Tip", "value": "Use -- to separate minikube arguments from kubectl arguments: minikube kubectl -- get pods" }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Minikube & kubectl Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is minikube used for?",
+                        "options": ["Production clusters", "Local learning and development", "Cloud deployment", "Container building"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command starts a minikube cluster?",
+                        "options": ["minikube run", "minikube start", "minikube create", "minikube init"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command lists all pods in all namespaces?",
+                        "options": ["kubectl get pods", "kubectl get pods -A", "kubectl list pods", "kubectl pods --all"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command applies a YAML manifest?",
+                        "options": ["kubectl create -f", "kubectl apply -f", "kubectl run -f", "kubectl deploy -f"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "How many nodes does a minikube cluster typically have?",
+                        "options": ["3", "5", "1", "Depends on cloud provider"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🏗️", "title": "Architecture", "text": "Control plane (API, etcd, scheduler) + Worker nodes (kubelet, kube-proxy)" },
+        { "icon": "📦", "title": "Pods", "text": "Smallest unit; single-container, sidecar, init patterns" },
+        { "icon": "📋", "title": "Declarative API", "text": "YAML manifests, reconciliation loops, CRDs" },
+        { "icon": "⚡", "title": "Core Features", "text": "Self-healing, scaling, rollouts, service discovery" },
+        { "icon": "🧪", "title": "Minikube", "text": "Local single-node cluster for learning" }
+    ]
+}

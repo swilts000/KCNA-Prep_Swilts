@@ -1,0 +1,377 @@
+{
+    "title": "Chapter 1: From Cloud to Cloud Native and Kubernetes",
+    "subtitle": "Master the evolution from traditional servers to Kubernetes",
+    "themeColor": "#326ce5",
+    "themeColorDark": "#2857b8",
+    "lessons": [
+        {
+            "title": "Lesson 1: Before the Cloud & Virtualization",
+            "navTitle": "Before Cloud & Virtualization",
+            "cards": [
+                {
+                    "title": "The Evolution Timeline",
+                    "content": [
+                        { "type": "text", "value": "Computing infrastructure has evolved through distinct eras:" },
+                        { "type": "grid", "columns": 4, "items": [
+                            { "icon": "🖥️", "title": "Physical", "text": "1990s-2000s" },
+                            { "icon": "💻", "title": "Virtual", "text": "2000s-2010s" },
+                            { "icon": "☁️", "title": "Cloud", "text": "2010s" },
+                            { "icon": "🌐", "title": "Cloud-Native", "text": "2015+" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Evolution Diagram",
+                    "content": [
+                        {
+                            "type": "diagram",
+                            "format": "mermaid",
+                            "source": "graph LR\n  Physical([Physical]) --> Virtual([Virtual])\n  Virtual --> Cloud([Cloud])\n  Cloud --> CloudNative([Cloud\n  Native])\n",
+                            "caption": "Evolution from Physical -> Virtual -> Cloud -> Cloud-Native"
+                        }
+                    ]
+                },
+                {
+                    "title": "Before the Cloud (B.C.)",
+                    "content": [
+                        { "type": "text", "value": "Before cloud computing, infrastructure was simple but inefficient:" },
+                        { "type": "list", "items": [
+                            "<strong>One physical server</strong> ran one OS and typically one application",
+                            "<strong>Underutilization</strong> was common — idle apps wasted hardware",
+                            "<strong>Scaling</strong> required buying, shipping, installing, and cabling new servers",
+                            "This process often took <strong>weeks</strong>"
+                        ]},
+                        { "type": "quote", "value": "If an application was not used, the computing resources of the server where it ran were wasted." },
+                        { "type": "keypoint", "badge": "Key Problem", "value": "Physical servers were expensive, slow to provision, and often sat idle." }
+                    ]
+                },
+                {
+                    "title": "Virtualization Revolution",
+                    "content": [
+                        { "type": "text", "value": "Virtualization became mainstream in the early 2000s with technologies like <strong>XEN</strong> and <strong>KVM</strong>." },
+                        { "type": "concept", "title": "What is a Hypervisor?", "value": "Software that emulates hardware resources (CPU, RAM, disk, network) allowing multiple virtual machines to share one physical server." },
+                        { "type": "nested", "title": "Virtual Machine Components", "content": [
+                            { "type": "list", "items": [
+                                "Its own <strong>Operating System</strong>",
+                                "Virtual <strong>CPU</strong>",
+                                "Virtual <strong>Memory</strong>",
+                                "Virtual <strong>Disk</strong>",
+                                "Virtual <strong>Network Interface Card (NIC)</strong>",
+                                "<strong>Full isolation</strong> from other VMs"
+                            ]}
+                        ]},
+                        { "type": "nested", "title": "Benefits of Virtualization", "content": [
+                            { "type": "grid", "columns": 2, "items": [
+                                { "icon": "💰", "text": "Reduced hardware needs & lower costs" },
+                                { "icon": "⚡", "text": "Lower power consumption" },
+                                { "icon": "🚀", "text": "Faster provisioning (minutes vs weeks)" },
+                                { "icon": "📦", "text": "Better resource utilization" }
+                            ]}
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Physical vs Virtual Comparison",
+                "type": "dragdrop",
+                "instructions": "Drag each characteristic to the correct category:",
+                "zones": [
+                    { "id": "physical", "title": "Physical Servers" },
+                    { "id": "virtual", "title": "Virtual Machines" }
+                ],
+                "items": [
+                    { "text": "Weeks to provision", "zone": "physical" },
+                    { "text": "Minutes to provision", "zone": "virtual" },
+                    { "text": "One app per server", "zone": "physical" },
+                    { "text": "Multiple VMs per server", "zone": "virtual" },
+                    { "text": "High hardware costs", "zone": "physical" },
+                    { "text": "Uses hypervisor", "zone": "virtual" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Cloud Computing & Service Models",
+            "navTitle": "Cloud & Service Models",
+            "cards": [
+                {
+                    "title": "What is Cloud Computing?",
+                    "content": [
+                        { "type": "highlight", "value": "Cloud computing = virtualization on demand" },
+                        { "type": "list", "items": [
+                            "Hardware <strong>owned and managed</strong> by the provider",
+                            "Customers <strong>pay only for what they use</strong>",
+                            "Massive catalog of services: storage, networking, firewalls, GPUs, managed databases, etc."
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Cloud Types",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "☁️", "title": "Public Cloud", "text": "AWS, Azure, GCP" },
+                            { "icon": "🏢", "title": "Private Cloud", "text": "VMware, Rackspace" },
+                            { "icon": "🔀", "title": "Hybrid Cloud", "text": "Mix of private + public" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Cloud Service Delivery Models",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "IaaS", "text": "Infrastructure as a Service - Most flexible, you manage OS. Ex: EC2, Compute Engine" },
+                            { "title": "PaaS", "text": "Platform as a Service - Focus on apps, provider handles OS. Ex: Heroku, App Engine" },
+                            { "title": "SaaS", "text": "Software as a Service - Fully managed apps. Ex: Gmail, Slack" },
+                            { "title": "FaaS", "text": "Function as a Service - Event-triggered functions. Ex: AWS Lambda, Azure Functions" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Shared Responsibility Model",
+                    "content": [
+                        { "type": "text", "value": "Defines what the cloud provider vs. customer must secure or maintain." },
+                        { "type": "comparison", "leftTitle": "Provider Manages", "rightTitle": "Customer Manages",
+                            "left": ["Physical security", "Networking infrastructure", "Power & cooling", "Hardware"],
+                            "right": ["Data & access control", "Application security", "OS patches (IaaS)", "Configuration"]
+                        }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Match the Service Model",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "You need full control over the OS and want to install custom software:",
+                        "options": ["IaaS", "PaaS", "SaaS", "FaaS"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "You want to deploy code without managing servers or infrastructure:",
+                        "options": ["IaaS", "PaaS", "SaaS", "FaaS"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "You use Gmail for company email:",
+                        "options": ["IaaS", "PaaS", "SaaS", "FaaS"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "You write a function that triggers when a file is uploaded:",
+                        "options": ["IaaS", "PaaS", "SaaS", "FaaS"],
+                        "answer": "3"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Cloud-Native & Containers",
+            "navTitle": "Cloud-Native & Containers",
+            "cards": [
+                {
+                    "title": "What is Cloud-Native?",
+                    "content": [
+                        { "type": "text", "value": "Cloud-native is an <strong>architectural approach</strong> emphasizing:" },
+                        { "type": "tags", "items": ["🔄 Resiliency", "📈 Scalability", "🤖 Automation", "👁️ Observability", "⚡ Dynamic Infrastructure"] },
+                        { "type": "keypoint", "badge": "Important", "value": "Not tied to public cloud — Kubernetes on-prem is still cloud-native!" }
+                    ]
+                },
+                {
+                    "title": "What are Containers?",
+                    "content": [
+                        { "type": "highlight", "value": "Containers are lightweight OS-level virtualization" },
+                        { "type": "nested", "title": "Container Characteristics", "content": [
+                            { "type": "list", "items": [
+                                "Share <strong>one host OS kernel</strong>",
+                                "Isolated libraries & dependencies",
+                                "Isolated processes, networking, storage"
+                            ]}
+                        ]},
+                        { "type": "nested", "title": "Container Advantages", "content": [
+                            { "type": "grid", "columns": 2, "items": [
+                                { "icon": "⚡", "title": "Fast Startup", "text": "Seconds vs minutes for VMs" },
+                                { "icon": "🪶", "title": "Lightweight", "text": "Alpine images ~5-10 MB" },
+                                { "icon": "📦", "title": "Portable", "text": "Run anywhere containers are supported" },
+                                { "icon": "📊", "title": "Efficient", "text": "Many more containers than VMs per host" }
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Container Images & Runtimes",
+                    "content": [
+                        { "type": "concept", "title": "Container Images", "value": "Templates used to create containers. Every time we execute an image, a container is created." },
+                        { "type": "text", "value": "<strong>Popular Container Runtimes:</strong>" },
+                        { "type": "tags", "items": [
+                            { "text": "containerd", "primary": true },
+                            { "text": "CRI-O", "primary": true },
+                            { "text": "Docker Engine", "primary": true }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "VM vs Container Comparison",
+                "type": "dragdrop",
+                "instructions": "Categorize each characteristic:",
+                "zones": [
+                    { "id": "vm", "title": "Virtual Machines" },
+                    { "id": "container", "title": "Containers" }
+                ],
+                "items": [
+                    { "text": "Shares host OS kernel", "zone": "container" },
+                    { "text": "Has its own OS", "zone": "vm" },
+                    { "text": "~5-10 MB image size", "zone": "container" },
+                    { "text": "GBs in size", "zone": "vm" },
+                    { "text": "Starts in seconds", "zone": "container" },
+                    { "text": "Starts in minutes", "zone": "vm" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Monolithic vs Microservices",
+            "navTitle": "Monolithic vs Microservices",
+            "cards": [
+                {
+                    "title": "Architecture Comparison",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Monolithic", "rightTitle": "Microservices",
+                            "left": ["Single deployable unit", "Shared codebase", "Scale entire app", "Single point of failure"],
+                            "right": ["Multiple independent services", "Separate codebases", "Scale individual services", "Fault isolation"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Monolithic Applications",
+                    "content": [
+                        { "type": "text", "value": "All functionality bundled together in a single deployable unit." },
+                        { "type": "list", "items": [
+                            "❌ All functionality bundled together",
+                            "❌ Hard to update individual components",
+                            "❌ Risky deployments (all or nothing)",
+                            "❌ Scaling is coarse and inefficient"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Microservices Architecture",
+                    "content": [
+                        { "type": "text", "value": "Small, independent services communicating over the network." },
+                        { "type": "list", "items": [
+                            "✅ Has its own dedicated team",
+                            "✅ Deploys independently",
+                            "✅ Scales independently",
+                            "✅ Fails independently (fault isolation)"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Architecture Decision Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "A startup building an MVP quickly with a small team:",
+                        "options": ["Monolithic", "Microservices"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "A large e-commerce platform with different teams for payments, inventory, and users:",
+                        "options": ["Monolithic", "Microservices"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Need to scale only the payment processing during Black Friday:",
+                        "options": ["Monolithic", "Microservices"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "A bug in one component should NOT bring down the entire application:",
+                        "options": ["Monolithic", "Microservices"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Container Orchestration & Kubernetes",
+            "navTitle": "Kubernetes",
+            "cards": [
+                {
+                    "title": "Why Container Orchestration?",
+                    "content": [
+                        { "type": "text", "value": "As microservices grew, container counts <strong>exploded</strong>. Managing hundreds or thousands of containers manually became impossible." },
+                        { "type": "text", "value": "<strong>Popular Orchestrators:</strong>" },
+                        { "type": "tags", "items": [
+                            { "text": "Kubernetes", "primary": true },
+                            "OpenShift",
+                            "Nomad",
+                            "Docker Swarm",
+                            "Apache Mesos"
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Kubernetes Origins",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🇬🇷", "text": "Name means helmsman/pilot in Greek" },
+                            { "icon": "⭐", "text": "Logo has seven spokes (Project Seven)" },
+                            { "icon": "🏢", "text": "Created by Google in 2014" },
+                            { "icon": "🤖", "text": "Inspired by Google's internal system Borg" },
+                            { "icon": "🎓", "text": "First CNCF graduated project" },
+                            { "icon": "📊", "text": "One of largest OSS projects on GitHub" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Key Kubernetes Features",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "📋 Declarative API", "text": "Define desired state, K8s makes it happen" },
+                            { "title": "🎯 Desired State", "text": "Continuously reconciles actual vs desired" },
+                            { "title": "📅 Scheduling", "text": "Automatically places containers on nodes" },
+                            { "title": "🔄 Rolling Updates", "text": "Zero-downtime deployments" },
+                            { "title": "📈 Autoscaling", "text": "Scale based on demand" },
+                            { "title": "💚 Self-Healing", "text": "Automatically restarts failed containers" }
+                        ]},
+                        { "type": "example", "title": "Self-Healing Example", "value": "If a node fails, Kubernetes automatically recreates missing containers on healthy nodes." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Kubernetes Features Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "A container crashes and Kubernetes automatically restarts it:",
+                        "options": ["Self-Healing", "Autoscaling", "Rolling Updates"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "Traffic increases and Kubernetes adds more container replicas:",
+                        "options": ["Self-Healing", "Autoscaling", "Rolling Updates"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Deploying a new version without any downtime:",
+                        "options": ["Self-Healing", "Autoscaling", "Rolling Updates"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "You define 'I want 3 replicas' and Kubernetes ensures exactly 3 are running:",
+                        "options": ["Declarative API", "Scheduling", "Desired State Management"],
+                        "answer": "2"
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🖥️", "title": "Traditional Servers", "text": "Inefficient, slow to provision" },
+        { "icon": "💻", "title": "Virtualization", "text": "Multiple VMs per server" },
+        { "icon": "☁️", "title": "Cloud", "text": "On-demand infrastructure" },
+        { "icon": "🌐", "title": "Cloud-Native", "text": "Resilient, scalable, automated" },
+        { "icon": "📦", "title": "Containers", "text": "Lightweight, portable, fast" },
+        { "icon": "⚙️", "title": "Kubernetes", "text": "Industry-standard orchestrator" }
+    ]
+}

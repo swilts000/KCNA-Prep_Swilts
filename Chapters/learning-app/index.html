@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCNA Learning App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../../theme-toggle.css">
+</head>
+<body>
+    <header id="app-header">
+        <h1 id="chapter-title">Loading...</h1>
+        <p class="subtitle" id="chapter-subtitle"></p>
+        
+        <!-- Chapter Selector Hamburger -->
+        <div class="chapter-menu">
+            <button class="hamburger" id="hamburger-btn" onclick="toggleChapterMenu()">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            <div class="chapter-dropdown" id="chapter-dropdown">
+                <h4>📖 Select Chapter</h4>
+                <div class="chapter-list" id="chapter-list">
+                    <!-- Dynamically populated -->
+                </div>
+                <a href="../../index.html" class="chapter-item" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none; border-top: 1px solid var(--border-color);">
+                    🏠 Back to Flashcards
+                </a>
+            </div>
+        </div>
+
+        <!-- Flashcard quick link placed to the right of the menu -->
+        <a href="../../index.html" class="flashcard-link" aria-label="Open Flashcards">Flashcard</a>
+        <button id="show-diagrams-btn" class="show-diagrams-btn" aria-pressed="false" title="Show/Hide diagrams for this chapter">Show Diagrams</button>
+    </header>
+
+    <nav class="lesson-nav" id="lesson-nav">
+        <!-- Dynamically populated -->
+    </nav>
+
+    <main class="content-area" id="content-area">
+        <!-- Dynamically populated -->
+    </main>
+
+    <!-- LAB POPUP -->
+    <div class="lab-overlay hidden" id="lab-overlay" onclick="closeLab()"></div>
+    <div class="lab-panel hidden" id="lab-panel">
+        <div class="lab-header">
+            <h3 id="lab-title">Lab</h3>
+            <button class="close-btn" onclick="closeLab()">✕</button>
+        </div>
+        <div class="lab-content" id="lab-content">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <!-- Chapter Summary -->
+    <section class="summary-section" id="summary-section">
+        <h2>📚 Chapter Summary</h2>
+        <div class="summary-grid" id="summary-grid">
+            <!-- Dynamically populated -->
+        </div>
+    </section>
+
+    <footer>
+        <p>KCNA Exam Preparation | Dynamic Learning App</p>
+    </footer>
+
+    <script src="../../theme-manager.js"></script>
+    <script src="../../theme-toggle.js"></script>
+    <!-- Mermaid for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        if (window.mermaid) {
+            mermaid.initialize({ startOnLoad: false, theme: 'default' });
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>

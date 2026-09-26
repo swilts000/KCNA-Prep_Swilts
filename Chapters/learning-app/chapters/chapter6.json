@@ -1,0 +1,494 @@
+{
+    "title": "Chapter 6: Deploying and Scaling Applications with Kubernetes",
+    "subtitle": "Master Deployments, ReplicaSets, storage, and health checks",
+    "themeColor": "#326ce5",
+    "themeColorDark": "#2857b8",
+    "lessons": [
+        {
+            "title": "Lesson 1: Deployments & ReplicaSets",
+            "navTitle": "Deployments & ReplicaSets",
+            "cards": [
+                {
+                    "title": "Workload Resources Overview",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes provides several resources for managing workloads:" },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "icon": "🚀", "title": "Deployment", "text": "Stateless apps with rolling updates" },
+                            { "icon": "📊", "title": "ReplicaSet", "text": "Maintains desired pod count" },
+                            { "icon": "🖥️", "title": "DaemonSet", "text": "One pod per node" }
+                        ]},
+                        { "type": "keypoint", "badge": "Important", "value": "This is one of the densest and most important chapters — make sure to complete all practical assignments!" }
+                    ]
+                },
+                {
+                    "title": "What is a Deployment?",
+                    "content": [
+                        { "type": "highlight", "value": "A Deployment is a declarative resource that manages the lifecycle of Pods and ReplicaSets" },
+                        { "type": "text", "value": "You declare the desired state and the Deployment controller reconciles the actual state to match." },
+                        { "type": "nested", "title": "Deployments Provide", "content": [
+                            { "type": "list", "items": [
+                                "Rolling updates",
+                                "Rollbacks",
+                                "Declarative scaling"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Deployment Manifest Structure",
+                    "content": [
+                        { "type": "text", "value": "Key fields in a Deployment manifest:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "apiVersion", "text": "apps/v1" },
+                            { "title": "kind", "text": "Deployment" },
+                            { "title": "spec.replicas", "text": "Desired number of pod replicas" },
+                            { "title": "spec.selector.matchLabels", "text": "How Deployment finds its Pods" },
+                            { "title": "spec.template", "text": "Pod template (metadata + spec)" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "What is a ReplicaSet?",
+                    "content": [
+                        { "type": "concept", "title": "ReplicaSet", "value": "Ensures a specified number of pod replicas are running at any given time." },
+                        { "type": "text", "value": "Deployments create and manage ReplicaSets for you; you normally interact with Deployments rather than ReplicaSets directly." },
+                        { "type": "keypoint", "badge": "Key Point", "value": "ReplicaSets are the mechanism that keeps the desired number of Pods alive." }
+                    ]
+                },
+                {
+                    "title": "Deployment Commands",
+                    "content": [
+                        { "type": "text", "value": "Common kubectl commands for Deployments:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "Create", "text": "kubectl create -f deployment.yaml" },
+                            { "title": "Get Pods", "text": "kubectl get pods" },
+                            { "title": "Get ReplicaSets", "text": "kubectl get replicasets" },
+                            { "title": "Scale", "text": "kubectl scale deployment NAME --replicas=5" }
+                        ]},
+                        { "type": "example", "title": "Self-Healing", "value": "Delete a pod and Kubernetes will recreate it to match the Deployment's replicas setting." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Deployments Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What does a Deployment manage?",
+                        "options": ["Nodes", "Pods and ReplicaSets", "Services", "ConfigMaps"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What happens if you delete a Pod managed by a Deployment?",
+                        "options": ["It stays deleted", "Kubernetes recreates it", "The Deployment is deleted", "Nothing"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which field specifies the number of pod replicas?",
+                        "options": ["spec.count", "spec.replicas", "spec.pods", "spec.instances"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is the apiVersion for Deployments?",
+                        "options": ["v1", "apps/v1", "extensions/v1", "core/v1"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are key fields in a Deployment manifest? (Select all that apply)",
+                        "options": [
+                            { "text": "spec.replicas", "value": "replicas" },
+                            { "text": "spec.selector", "value": "selector" },
+                            { "text": "spec.template", "value": "template" },
+                            { "text": "spec.volumes", "value": "volumes" }
+                        ],
+                        "answer": ["replicas", "selector", "template"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: Rolling Updates & DaemonSets",
+            "navTitle": "Updates & DaemonSets",
+            "cards": [
+                {
+                    "title": "Deployment vs DaemonSet",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Deployment", "rightTitle": "DaemonSet",
+                            "left": ["Configurable replica count", "For stateless applications", "Pods scheduled by scheduler", "Scale up/down as needed"],
+                            "right": ["One pod per node (fixed)", "For node-level services", "Pods on every (or selected) node", "Scales with cluster nodes"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Rolling Updates",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes performs rolling updates by creating new pods and terminating old ones according to the Deployment's strategy." },
+                        { "type": "nested", "title": "Update Commands", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Update image:</strong> kubectl set image deployment/NAME container=image:tag",
+                                "<strong>Check history:</strong> kubectl rollout history deployment/NAME",
+                                "<strong>Roll back:</strong> kubectl rollout undo deployment/NAME"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Deployment Strategy Settings",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "strategy.type", "text": "RollingUpdate (default) or Recreate" },
+                            { "title": "maxUnavailable", "text": "Max pods unavailable during update" },
+                            { "title": "maxSurge", "text": "Max extra pods above desired count" }
+                        ]},
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Use sensible maxUnavailable and maxSurge values to achieve zero-downtime deployments." }
+                    ]
+                },
+                {
+                    "title": "RollingUpdate vs Recreate",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "RollingUpdate", "rightTitle": "Recreate",
+                            "left": ["Gradual replacement", "Zero downtime possible", "Old and new pods coexist briefly", "Default strategy"],
+                            "right": ["All old pods killed first", "Downtime during update", "Clean slate for new version", "Use when versions can't coexist"]
+                        }
+                    ]
+                },
+                {
+                    "title": "What is a DaemonSet?",
+                    "content": [
+                        { "type": "highlight", "value": "A DaemonSet ensures that one pod copy runs on each (or a selected set of) node(s)" },
+                        { "type": "nested", "title": "Typical Uses", "content": [
+                            { "type": "list", "items": [
+                                "Node-level logging agents (e.g., Fluent Bit)",
+                                "Node monitoring exporters (e.g., Prometheus node exporter)",
+                                "Storage or networking daemons"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "DaemonSet Characteristics",
+                    "content": [
+                        { "type": "list", "items": [
+                            "One pod per node (not configurable replica count per node)",
+                            "Automatically schedules pods on new nodes as they join",
+                            "Useful for cluster-wide node services"
+                        ]},
+                        { "type": "keypoint", "badge": "Remember", "value": "Use Deployments for stateless workloads and DaemonSets for node-level services." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Updates & DaemonSets Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is the default Deployment strategy?",
+                        "options": ["Recreate", "RollingUpdate", "BlueGreen", "Canary"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which command rolls back a Deployment?",
+                        "options": ["kubectl rollout undo", "kubectl rollback", "kubectl revert", "kubectl restore"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "How many pods does a DaemonSet run per node?",
+                        "options": ["Configurable", "One", "Three", "Depends on replicas"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which is a typical DaemonSet use case?",
+                        "options": ["Web application", "Node logging agent", "Database", "API gateway"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are valid DaemonSet use cases? (Select all that apply)",
+                        "options": [
+                            { "text": "Node logging agents", "value": "logging" },
+                            { "text": "Node monitoring exporters", "value": "monitoring" },
+                            { "text": "Web applications", "value": "web" },
+                            { "text": "Storage daemons", "value": "storage" }
+                        ],
+                        "answer": ["logging", "monitoring", "storage"],
+                        "multi": true
+                    },
+                    {
+                        "question": "When should you use Recreate strategy?",
+                        "options": ["Always for zero downtime", "When old and new versions can't coexist", "For stateless apps", "Never"],
+                        "answer": "1"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: Stateful Workloads & Storage",
+            "navTitle": "Storage & PVCs",
+            "cards": [
+                {
+                    "title": "The Storage Problem",
+                    "content": [
+                        { "type": "text", "value": "Containers are ephemeral by default; to persist data across pod restarts you must use Kubernetes storage primitives." },
+                        { "type": "keypoint", "badge": "Warning", "value": "Avoid storing critical data on container filesystems; always use persistent volumes for stateful services." }
+                    ]
+                },
+                {
+                    "title": "Static vs Dynamic Provisioning",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Static Provisioning", "rightTitle": "Dynamic Provisioning",
+                            "left": ["Admin pre-creates PVs", "PVC binds to existing PV", "Manual management", "Good for specific storage needs"],
+                            "right": ["PV created automatically", "StorageClass defines how", "Automated management", "Recommended for production"]
+                        }
+                    ]
+                },
+                {
+                    "title": "PersistentVolume (PV) & PersistentVolumeClaim (PVC)",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "📦", "title": "PersistentVolume (PV)", "text": "Cluster resource representing storage (cloud block, NFS, local disk)" },
+                            { "icon": "📝", "title": "PersistentVolumeClaim (PVC)", "text": "User's request for storage (size, access mode, storage class)" }
+                        ]},
+                        { "type": "text", "value": "PVs can be provisioned <strong>statically</strong> by an admin or <strong>dynamically</strong> by the cluster." }
+                    ]
+                },
+                {
+                    "title": "Access Modes",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "ReadWriteOnce (RWO)", "text": "Mounted read-write by a single node" },
+                            { "title": "ReadOnlyMany (ROX)", "text": "Mounted read-only by many nodes" },
+                            { "title": "ReadWriteMany (RWX)", "text": "Mounted read-write by many nodes (requires NFS-like storage)" },
+                            { "title": "ReadWriteOncePod", "text": "Single pod write access (K8s 1.22+)" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "StorageClass",
+                    "content": [
+                        { "type": "concept", "title": "StorageClass", "value": "Defines how dynamic provisioning should create PVs (provisioner, parameters, reclaim policy)." },
+                        { "type": "text", "value": "If a PVC specifies <code>storageClassName</code>, Kubernetes will dynamically provision a PV using the matching StorageClass." },
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Prefer dynamic provisioning with StorageClasses and CSI drivers for production storage." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Storage Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is a PersistentVolumeClaim?",
+                        "options": ["A storage resource", "A user's request for storage", "A node", "A container"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which access mode allows read-write by many nodes?",
+                        "options": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany", "ReadWriteOncePod"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What defines how dynamic provisioning creates PVs?",
+                        "options": ["ConfigMap", "Secret", "StorageClass", "Service"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "Why should you use persistent volumes?",
+                        "options": ["Faster networking", "Data persists across pod restarts", "Better CPU usage", "Smaller images"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which access modes exist? (Select all that apply)",
+                        "options": [
+                            { "text": "ReadWriteOnce", "value": "rwo" },
+                            { "text": "ReadOnlyMany", "value": "rox" },
+                            { "text": "ReadWriteMany", "value": "rwx" },
+                            { "text": "WriteOnlyOnce", "value": "woo" }
+                        ],
+                        "answer": ["rwo", "rox", "rwx"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: ConfigMaps, Secrets & Services",
+            "navTitle": "Config & Services",
+            "cards": [
+                {
+                    "title": "ConfigMaps vs Secrets",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "ConfigMap", "rightTitle": "Secret",
+                            "left": ["Non-sensitive configuration", "Plain text storage", "Key/value pairs or files", "No special access controls"],
+                            "right": ["Sensitive data (passwords, tokens)", "Base64-encoded storage", "Key/value pairs or files", "Additional access controls"]
+                        },
+                        { "type": "keypoint", "badge": "Best Practice", "value": "Use ConfigMaps and Secrets to separate configuration from images." }
+                    ]
+                },
+                {
+                    "title": "Injecting Configuration",
+                    "content": [
+                        { "type": "text", "value": "Both ConfigMaps and Secrets can be injected into pods as:" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔤", "title": "Environment Variables", "text": "Using envFrom or valueFrom" },
+                            { "icon": "📁", "title": "Mounted Files", "text": "Using volume mounts" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Services & Service Discovery",
+                    "content": [
+                        { "type": "text", "value": "A Service provides a stable network endpoint for a set of pods selected by labels." },
+                        { "type": "grid", "columns": 3, "items": [
+                            { "title": "ClusterIP", "text": "Internal cluster IP (default)" },
+                            { "title": "NodePort", "text": "Exposes on each node's IP" },
+                            { "title": "LoadBalancer", "text": "Cloud load balancer" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Kubernetes DNS",
+                    "content": [
+                        { "type": "highlight", "value": "Kubernetes DNS automatically creates DNS entries for Services" },
+                        { "type": "example", "title": "DNS Format", "value": "my-service.default.svc.cluster.local" },
+                        { "type": "text", "value": "This enables service discovery — pods can reach services by name." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Config & Services Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What should you use for sensitive data like passwords?",
+                        "options": ["ConfigMap", "Secret", "Service", "PVC"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What is the default Service type?",
+                        "options": ["NodePort", "LoadBalancer", "ClusterIP", "ExternalName"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "How does Kubernetes enable service discovery?",
+                        "options": ["Manual IP configuration", "DNS entries for Services", "Hardcoded endpoints", "External DNS"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What do ConfigMaps store?",
+                        "options": ["Sensitive passwords", "Non-sensitive configuration", "Container images", "Pod definitions"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are valid Service types? (Select all that apply)",
+                        "options": [
+                            { "text": "ClusterIP", "value": "cluster" },
+                            { "text": "NodePort", "value": "node" },
+                            { "text": "LoadBalancer", "value": "lb" },
+                            { "text": "DirectIP", "value": "direct" }
+                        ],
+                        "answer": ["cluster", "node", "lb"],
+                        "multi": true
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 5: Health Checks & Probes",
+            "navTitle": "Health Probes",
+            "cards": [
+                {
+                    "title": "Why Health Checks?",
+                    "content": [
+                        { "type": "text", "value": "Kubernetes uses probes to determine container health and readiness." },
+                        { "type": "keypoint", "badge": "Purpose", "value": "Define readiness and liveness probes to enable graceful traffic management and self-healing." }
+                    ]
+                },
+                {
+                    "title": "Liveness vs Readiness Probes",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Liveness Probe", "rightTitle": "Readiness Probe",
+                            "left": ["Is the container alive?", "Failure → container restart", "Detects deadlocks/crashes", "Enables self-healing"],
+                            "right": ["Is the container ready for traffic?", "Failure → removed from endpoints", "Detects initialization delays", "Enables graceful traffic management"]
+                        }
+                    ]
+                },
+                {
+                    "title": "Probe Types",
+                    "content": [
+                        { "type": "grid", "columns": 3, "items": [
+                            { "title": "httpGet", "text": "HTTP GET on a path and port" },
+                            { "title": "tcpSocket", "text": "TCP connection to a port" },
+                            { "title": "exec", "text": "Run command, check exit code" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Probe Settings",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "title": "initialDelaySeconds", "text": "Wait before first probe" },
+                            { "title": "periodSeconds", "text": "Probe frequency" },
+                            { "title": "timeoutSeconds", "text": "Probe timeout" },
+                            { "title": "failureThreshold", "text": "Consecutive failures to change state" }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Health Probes Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What happens when a liveness probe fails?",
+                        "options": ["Pod removed from endpoints", "Container is restarted", "Nothing", "Deployment scales down"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "What happens when a readiness probe fails?",
+                        "options": ["Container is restarted", "Pod removed from Service endpoints", "Node is drained", "Deployment rolls back"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which probe type performs an HTTP request?",
+                        "options": ["tcpSocket", "exec", "httpGet", "grpc"],
+                        "answer": "2"
+                    },
+                    {
+                        "question": "What does initialDelaySeconds configure?",
+                        "options": ["Probe frequency", "Wait before first probe", "Timeout duration", "Failure threshold"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which are valid probe types? (Select all that apply)",
+                        "options": [
+                            { "text": "httpGet", "value": "http" },
+                            { "text": "tcpSocket", "value": "tcp" },
+                            { "text": "exec", "value": "exec" },
+                            { "text": "udpSocket", "value": "udp" }
+                        ],
+                        "answer": ["http", "tcp", "exec"],
+                        "multi": true
+                    },
+                    {
+                        "question": "Which probe settings exist? (Select all that apply)",
+                        "options": [
+                            { "text": "initialDelaySeconds", "value": "delay" },
+                            { "text": "periodSeconds", "value": "period" },
+                            { "text": "failureThreshold", "value": "failure" },
+                            { "text": "retryCount", "value": "retry" }
+                        ],
+                        "answer": ["delay", "period", "failure"],
+                        "multi": true
+                    }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🚀", "title": "Deployments", "text": "Manage pod lifecycles with rolling updates and rollbacks" },
+        { "icon": "📊", "title": "ReplicaSets", "text": "Ensure desired number of pod replicas" },
+        { "icon": "🖥️", "title": "DaemonSets", "text": "One pod per node for cluster-wide services" },
+        { "icon": "💾", "title": "Storage", "text": "PVs, PVCs, and StorageClasses for persistence" },
+        { "icon": "⚙️", "title": "Configuration", "text": "ConfigMaps and Secrets separate config from code" },
+        { "icon": "❤️", "title": "Health Probes", "text": "Liveness and readiness for self-healing" }
+    ]
+}

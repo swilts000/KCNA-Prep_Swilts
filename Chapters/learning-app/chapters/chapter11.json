@@ -1,0 +1,279 @@
+{
+    "title": "Chapter 11: Automating Cloud Native Application Delivery",
+    "subtitle": "Master CI/CD, GitOps, and Infrastructure as Code for cloud-native delivery",
+    "themeColor": "#9b59b6",
+    "themeColorDark": "#8e44ad",
+    "lessons": [
+        {
+            "title": "Lesson 1: Cloud Native Application Delivery",
+            "navTitle": "Cloud Native Delivery",
+            "cards": [
+                {
+                    "title": "What is a Release?",
+                    "content": [
+                        { "type": "concept", "title": "Release", "value": "A version of software containing new features, fixes, or enhancements. Releases use semantic versioning (e.g., v1.0.0)." },
+                        { "type": "text", "value": "<strong>Automation enables:</strong>" },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "⚡", "text": "Faster delivery" },
+                            { "icon": "🛡️", "text": "More stable releases" },
+                            { "icon": "📈", "text": "Higher productivity" },
+                            { "icon": "🐛", "text": "Fewer bugs through automated testing" },
+                            { "icon": "🔄", "text": "Repeatable, predictable results" },
+                            { "icon": "⏪", "text": "Quick rollback capability" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Continuous Lifecycle",
+                    "content": [
+                        { "type": "highlight", "value": "Application delivery follows a continuous lifecycle" },
+                        { "type": "tags", "items": ["CODE", "BUILD", "TEST", "RELEASE", "DEPLOY", "OPERATE", "MONITOR", "PLAN"] },
+                        { "type": "keypoint", "badge": "Benefit", "value": "Automation allows teams to ship updates multiple times per day and roll back quickly when needed." }
+                    ]
+                },
+                {
+                    "title": "Why Automation Matters",
+                    "content": [
+                        { "type": "text", "value": "Cloud Native applications often consist of many microservices. Delivering them manually is slow and error-prone." },
+                        { "type": "list", "items": [
+                            "❌ Manual delivery is slow and error-prone",
+                            "❌ Cannot scale to dozens of microservices",
+                            "❌ Human mistakes cause outages",
+                            "✅ Automation ensures consistency",
+                            "✅ Enables frequent, safe releases",
+                            "✅ Reduces risk through small increments"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "Application Delivery Quiz",
+                "type": "quiz",
+                "questions": [
+                    {
+                        "question": "What is a release?",
+                        "options": ["A version of software delivered to users", "A build artifact", "A deployment pipeline", "A testing phase"],
+                        "answer": "0"
+                    },
+                    {
+                        "question": "What does automation enable?",
+                        "options": ["Slower delivery", "More stable releases", "More bugs", "Manual processes"],
+                        "answer": "1"
+                    },
+                    {
+                        "question": "Which is NOT part of the continuous lifecycle?",
+                        "options": ["Build", "Test", "Monitor", "Delete"],
+                        "answer": "3"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 2: CI/CD Fundamentals",
+            "navTitle": "CI/CD",
+            "cards": [
+                {
+                    "title": "Continuous Integration (CI)",
+                    "content": [
+                        { "type": "concept", "title": "CI", "value": "Automates building and testing code whenever developers commit changes. It ensures the software is always in a working state." },
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "🔨", "title": "Build", "text": "Compile code and create artifacts" },
+                            { "icon": "🧪", "title": "Test", "text": "Run automated tests to verify quality" }
+                        ]},
+                        { "type": "keypoint", "badge": "Goal", "value": "CI catches issues early by running tests on every commit." }
+                    ]
+                },
+                {
+                    "title": "Continuous Delivery (CD) vs Continuous Deployment",
+                    "content": [
+                        { "type": "comparison", "leftTitle": "Continuous Delivery", "rightTitle": "Continuous Deployment",
+                            "left": ["Packages tested code into artifacts", "Stores in registries", "Deployment requires human approval", "Safer for production"],
+                            "right": ["Fully automates deployment", "No human intervention needed", "Deploys once tests pass", "Faster but requires confidence"]
+                        }
+                    ]
+                },
+                {
+                    "title": "CI/CD Pipeline",
+                    "content": [
+                        { "type": "text", "value": "A pipeline is a sequence of automated jobs:" },
+                        { "type": "tags", "items": ["Build", "Test", "Analyze", "Package", "Deploy"] },
+                        { "type": "keypoint", "badge": "Strategy", "value": "Small, frequent releases reduce risk and improve stability." }
+                    ]
+                },
+                {
+                    "title": "Popular CI/CD Tools",
+                    "content": [
+                        { "type": "text", "value": "<strong>Industry-standard CI/CD tools:</strong>" },
+                        { "type": "tags", "items": [
+                            { "text": "ArgoCD", "primary": true },
+                            { "text": "Jenkins", "primary": true },
+                            { "text": "GitLab CI", "primary": true },
+                            { "text": "Tekton" },
+                            { "text": "GitHub Actions" },
+                            { "text": "Spinnaker" },
+                            { "text": "FluxCD" },
+                            { "text": "GoCD" },
+                            { "text": "CircleCI" },
+                            { "text": "TravisCI" }
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "CI/CD Pipeline Stages",
+                "type": "dragdrop",
+                "instructions": "Order the CI/CD pipeline stages from first to last:",
+                "zones": [
+                    { "id": "pipeline", "title": "Pipeline Order (1-5)" }
+                ],
+                "items": [
+                    { "text": "Build", "zone": "pipeline", "order": 1 },
+                    { "text": "Test", "zone": "pipeline", "order": 2 },
+                    { "text": "Analyze", "zone": "pipeline", "order": 3 },
+                    { "text": "Package", "zone": "pipeline", "order": 4 },
+                    { "text": "Deploy", "zone": "pipeline", "order": 5 }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 3: GitOps",
+            "navTitle": "GitOps",
+            "cards": [
+                {
+                    "title": "What is GitOps?",
+                    "content": [
+                        { "type": "highlight", "value": "GitOps = CI/CD + Infrastructure as Code + Git as single source of truth" },
+                        { "type": "concept", "title": "GitOps", "value": "Extends CI/CD by using Git as the single source of truth for infrastructure and application configuration." },
+                        { "type": "keypoint", "badge": "Core", "value": "Git eliminates manual changes by enforcing declarative configuration stored in version control." }
+                    ]
+                },
+                {
+                    "title": "GitOps Core Elements",
+                    "content": [
+                        { "type": "nested", "title": "Three Core Elements", "content": [
+                            { "type": "list", "items": [
+                                "<strong>Merge Requests (MRs)</strong> - Code review, collaboration, audit trail",
+                                "<strong>Infrastructure as Code (IaC)</strong> - Declarative configuration stored in Git",
+                                "<strong>CI/CD Automation</strong> - Ensures environments match Git definitions"
+                            ]}
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Infrastructure Drift",
+                    "content": [
+                        { "type": "concept", "title": "Infrastructure Drift", "value": "Occurs when the live environment differs from the desired state defined in IaC." },
+                        { "type": "keypoint", "badge": "Solution", "value": "GitOps eliminates drift by automatically overwriting manual changes to match Git definitions." },
+                        { "type": "example", "title": "Example", "value": "If someone manually deletes a Kubernetes Deployment, GitOps tools detect drift and automatically recreate missing resources based on Git definitions." }
+                    ]
+                },
+                {
+                    "title": "GitOps Tools",
+                    "content": [
+                        { "type": "text", "value": "<strong>Popular GitOps tools:</strong>" },
+                        { "type": "tags", "items": [
+                            { "text": "ArgoCD", "primary": true },
+                            { "text": "FluxCD", "primary": true },
+                            { "text": "Jenkins X", "primary": true }
+                        ]},
+                        { "type": "keypoint", "badge": "Function", "value": "These tools continuously sync Git changes to Kubernetes clusters." }
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "GitOps Elements",
+                "type": "dragdrop",
+                "instructions": "Categorize each item to the correct GitOps element:",
+                "zones": [
+                    { "id": "elements", "title": "GitOps Core Elements" },
+                    { "id": "tools", "title": "GitOps Tools" },
+                    { "id": "practices", "title": "GitOps Practices" }
+                ],
+                "items": [
+                    { "text": "Merge Requests (MRs)", "zone": "elements" },
+                    { "text": "Infrastructure as Code (IaC)", "zone": "elements" },
+                    { "text": "CI/CD Automation", "zone": "elements" },
+                    { "text": "ArgoCD", "zone": "tools" },
+                    { "text": "FluxCD", "zone": "tools" },
+                    { "text": "Jenkins X", "zone": "tools" },
+                    { "text": "Declarative configuration", "zone": "practices" },
+                    { "text": "Single source of truth (Git)", "zone": "practices" }
+                ]
+            }
+        },
+        {
+            "title": "Lesson 4: Infrastructure as Code (IaC)",
+            "navTitle": "Infrastructure as Code",
+            "cards": [
+                {
+                    "title": "What is IaC?",
+                    "content": [
+                        { "type": "concept", "title": "Infrastructure as Code", "value": "Describes infrastructure using declarative definition files. Tools apply these definitions to create or update resources." },
+                        { "type": "highlight", "value": "IaC = Declarative infrastructure configuration in code" }
+                    ]
+                },
+                {
+                    "title": "Benefits of IaC",
+                    "content": [
+                        { "type": "grid", "columns": 2, "items": [
+                            { "icon": "⚡", "title": "Faster Setup", "text": "Provision infrastructure in minutes" },
+                            { "icon": "🔄", "title": "Reproducible", "text": "Identical environments every time" },
+                            { "icon": "📖", "title": "Human-Readable", "text": "Configuration in plain text" },
+                            { "icon": "📦", "title": "Version Control", "text": "Stored in Git with history" },
+                            { "icon": "🎯", "title": "No Drift", "text": "Live state matches definitions" },
+                            { "icon": "🤖", "title": "Automated", "text": "Apply changes with commands" }
+                        ]}
+                    ]
+                },
+                {
+                    "title": "Terraform Example",
+                    "content": [
+                        { "type": "text", "value": "This Terraform file provisions a VM in AWS:" },
+                        { "type": "code", "language": "hcl", "value": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 4.16\"\n    }\n  }\n}\n\nprovider \"aws\" {\n  region = \"eu-central-1\"\n}\n\nresource \"aws_instance\" \"kcna_demo_vm\" {\n  ami           = \"ami-051835d754b74795c\"\n  instance_type = \"t3.medium\"\n\n  tags = {\n    Name = \"KCNAExampleInstance\"\n  }\n}" },
+                        { "type": "keypoint", "badge": "Scope", "value": "IaC can manage VMs, load balancers, storage, firewall rules, and more." }
+                    ]
+                },
+                {
+                    "title": "IaC and Kubernetes",
+                    "content": [
+                        { "type": "keypoint", "badge": "Natural Fit", "value": "Kubernetes itself uses declarative configuration, making it a natural fit for IaC and GitOps." },
+                        { "type": "list", "items": [
+                            "Kubernetes manifests are IaC definitions",
+                            "Helm charts package IaC for reuse",
+                            "Kustomize provides IaC customization",
+                            "GitOps tools sync K8s manifests to clusters"
+                        ]}
+                    ]
+                }
+            ],
+            "lab": {
+                "title": "IaC Benefits",
+                "type": "dragdrop",
+                "instructions": "Categorize each characteristic:",
+                "zones": [
+                    { "id": "benefits", "title": "IaC Benefits" },
+                    { "id": "resources", "title": "IaC Manages" },
+                    { "id": "tools", "title": "IaC Tools" }
+                ],
+                "items": [
+                    { "text": "Faster setup", "zone": "benefits" },
+                    { "text": "Reproducible environments", "zone": "benefits" },
+                    { "text": "Version controlled", "zone": "benefits" },
+                    { "text": "Eliminates drift", "zone": "benefits" },
+                    { "text": "VMs", "zone": "resources" },
+                    { "text": "Load balancers", "zone": "resources" },
+                    { "text": "Firewall rules", "zone": "resources" },
+                    { "text": "Terraform", "zone": "tools" }
+                ]
+            }
+        }
+    ],
+    "summary": [
+        { "icon": "🔄", "title": "CI", "text": "Automates build and test stages" },
+        { "icon": "📦", "title": "CD", "text": "Packages and prepares releases" },
+        { "icon": "🚀", "title": "Continuous Deployment", "text": "Automates deployment" },
+        { "icon": "🔀", "title": "GitOps", "text": "CI/CD + IaC + Git" },
+        { "icon": "📝", "title": "IaC", "text": "Declarative infrastructure" },
+        { "icon": "🛠️", "title": "Tools", "text": "ArgoCD, FluxCD, Terraform" }
+    ]
+}
