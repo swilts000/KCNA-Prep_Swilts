@@ -2,29 +2,36 @@
 
 ## Welcome to Your Cloud-Native Learning Journey
 
-This repository contains **7 comprehensive courses** covering Kubernetes and essential cloud-native technologies. Whether you're preparing for the KCNA certification or building production-ready skills, you're in the right place!
+This repository contains **9 comprehensive courses** covering Kubernetes and essential cloud-native technologies. Whether you're preparing for the KCNA certification or building production-ready skills, you're in the right place!
 
 ---
 
 ## 📚 What's Inside?
 
-### ✅ **5 Complete Labs** (Ready to Use)
-- Kubernetes cluster creation
-- Deployment management
-- Node maintenance
-- Pod troubleshooting
+### ✅ **14 Complete Labs** (Ready to Use)
+- Kubernetes cluster creation and management
+- Deployment lifecycle and troubleshooting
 - Helm package management
+- Prometheus monitoring and PromQL
+- Grafana dashboards
+- HAProxy load balancing
+- Cilium networking with eBPF
+- IPAM with MetalLB
+- Vector log pipelines
+- TLS certificate management
 
-### ✅ **7 Course Structures** (Fully Organized)
+### ✅ **9 Course Structures** (Fully Organized)
 - Kubernetes Fundamentals
 - Helm
-- Cilium
 - Prometheus
 - Grafana
-- Vector
+- HAProxy (Load Balancing)
+- Cilium (Advanced Networking)
+- IPAM (IP Address Management)
+- Vector (Log Pipeline)
 - TLS Security
 
-### ✅ **~100 Planned Labs** (Roadmap Defined)
+### ✅ **~135 Planned Labs** (Roadmap Defined)
 - Progressive difficulty
 - Real-world scenarios
 - Production best practices
@@ -67,13 +74,15 @@ open lab-1.1-minikube-cluster.md
 |---|--------|--------|------|------|-------|
 | **01** | **Kubernetes Fundamentals** | ✅ 4 labs | 20 planned | ~22h | Core K8s skills |
 | **02** | **Helm** | ✅ 1 lab | 15 planned | ~12h | Package management |
-| **03** | **Prometheus** | 📋 Planned | 15 planned | ~12h | Monitoring |
-| **04** | **Grafana** | 📋 Planned | 15 planned | ~10h | Visualization |
-| **05** | **Cilium** | 📋 Planned | 15 planned | ~15h | Advanced networking |
-| **06** | **Vector** | 📋 Planned | 15 planned | ~10h | Log pipeline |
-| **07** | **TLS Security** | 📋 Planned | 15 planned | ~12h | Certificates |
+| **03** | **Prometheus** | ✅ 3 labs | 15 planned | ~12h | Monitoring & metrics |
+| **04** | **Grafana** | ✅ 1 lab | 15 planned | ~10h | Visualization |
+| **05** | **HAProxy** | ✅ 1 lab | 15 planned | ~12h | Load balancing |
+| **06** | **Cilium** | ✅ 1 lab | 15 planned | ~15h | Advanced networking |
+| **07** | **IPAM** | ✅ 1 lab | 15 planned | ~10h | IP management |
+| **08** | **Vector** | ✅ 1 lab | 15 planned | ~10h | Log pipeline |
+| **09** | **TLS Security** | ✅ 1 lab | 15 planned | ~12h | Certificates |
 
-**Total**: ~93 hours of hands-on learning
+**Total**: ~115 hours of hands-on learning
 
 ---
 
@@ -130,10 +139,34 @@ KCNA-Prep_Swilts/
     │       └── lab-1.1-helm-installation.md       ✅
     │
     ├── 03-Prometheus-Course/            ← Monitoring & metrics
+    │   └── labs/
+    │       ├── lab-1.1-prometheus-installation.md   ✅
+    │       ├── lab-2.1-promql-basics.md             ✅
+    │       └── lab-3.1-kubernetes-monitoring.md     ✅
+    │
     ├── 04-Grafana-Course/               ← Visualization
-    ├── 05-Cilium-Course/                ← Advanced networking
-    ├── 06-Vector-Course/                ← Log pipeline
-    └── 07-TLS-Security-Course/          ← Security & certificates
+    │   └── labs/
+    │       └── lab-1.1-grafana-installation.md      ✅
+    │
+    ├── 05-HAProxy-Course/               ← Load balancing
+    │   └── labs/
+    │       └── lab-1.1-haproxy-installation.md      ✅
+    │
+    ├── 06-Cilium-Course/                ← Advanced networking
+    │   └── labs/
+    │       └── lab-1.1-cilium-installation.md       ✅
+    │
+    ├── 07-IPAM-Course/                  ← IP address management
+    │   └── labs/
+    │       └── lab-1.1-ipam-metallb.md              ✅
+    │
+    ├── 08-Vector-Course/                ← Log pipeline
+    │   └── labs/
+    │       └── lab-1.1-vector-installation.md       ✅
+    │
+    └── 09-TLS-Security-Course/          ← Security & certificates
+        └── labs/
+            └── lab-1.1-cert-manager-installation.md ✅
 ```
 
 ---
@@ -190,19 +223,18 @@ KCNA-Prep_Swilts/
 ## 📊 Current Status
 
 ### ✅ Completed (Ready to Use)
-- **5 comprehensive labs** (5,000+ lines)
-- **7 course structures** (fully organized)
-- **18 documentation files**
-- **250+ code examples**
-- **20+ diagrams**
+- **14 comprehensive labs** (11,620+ lines)
+- **9 course structures** (fully organized)
+- **20+ documentation files**
+- **400+ code examples**
+- **40+ diagrams**
 
 ### 🔄 In Progress
-- Helm course expansion
-- Cilium course creation
-- Prometheus course creation
+- Additional labs for all courses
+- Advanced topics and scenarios
 
 ### 📋 Planned
-- 95+ additional labs
+- 121+ additional labs
 - Video walkthroughs
 - Practice exams
 - Real-world projects
@@ -271,7 +303,8 @@ cd Courses/01-Kubernetes-Fundamentals-Course/labs && open lab-1.1-minikube-clust
 
 ---
 
-**Version**: 1.0  
+**Version**: 2.0  
 **Created**: September 27, 2026  
+**Updated**: September 28, 2026  
 **Status**: Active Development  
-**Completion**: 5% (5 of ~100 labs)
+**Completion**: 10% (14 of ~135 labs)
