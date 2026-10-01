@@ -50,6 +50,23 @@ By completing this course, you will be able to:
 - **Lab 7.1**: Multi-Component Failure Recovery (Chapters 6, 7)
 - **Lab 7.2**: Performance Troubleshooting (Chapters 7, 10)
 
+---
+
+## 🔄 Companion Series: Lifecycle & Workflow Labs
+
+In addition to the cluster-operations labs above (in [`labs/`](labs/INDEX.md)), this course includes a dedicated **Lifecycle & Workflow** series in [`lifecycle-workflow-labs/`](lifecycle-workflow-labs/INDEX.md). Where the labs above focus on *operating clusters*, this series traces the **internal flows that happen inside Kubernetes** when you run workloads — each lab opens with a conceptual explanation before the hands-on steps.
+
+- **Module 1** — Pod Lifecycle & Core Workload Behavior (Labs 1.1–1.5)
+- **Module 2** — Networking Flow & Service Discovery (Labs 2.1–2.3)
+- **Module 3** — Storage Flow & Persistent Data (Labs 3.1–3.2)
+- **Module 4** — Scaling Flow & Autoscaling (Labs 4.1–4.2)
+- **Module 5** — Security Flow & Cluster Governance (Labs 5.1–5.4)
+- **Module 6** — Capstone: Full Lifecycle Simulation (Lab 6.1)
+
+Based on [`kubernetes_lab_curriculum.md`](kubernetes_lab_curriculum.md). **17 hands-on labs** covering what *actually happens* between `kubectl apply` and a secured, scalable, persistent app. → **[Start the series](lifecycle-workflow-labs/INDEX.md)**
+
+---
+
 ## 🛠️ Prerequisites
 
 ### Required Tools
